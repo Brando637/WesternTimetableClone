@@ -1,0 +1,285 @@
+[
+
+{
+
+
+"schedule": "pugIsLife",
+
+
+"listOfSchedule": [
+
+
+
+{
+
+
+
+
+"subject": "APPLMATH",
+
+
+
+
+"className": "APP MATH FOR ENGRS I",
+
+
+
+
+"catalog_nbr": 1413,
+
+
+
+
+"descrip": "Limits, continuity, differentiation of functions of one variable with applications, extreme values, integration, the fundamental theorem of calculus, methods and applications of integration to areas, volumes and engineering applications. Sequences and series, convergence, power series. Vector functions, partial differential calculus, gradients, directional derivatives and applications.\n \nAntirequisite(s): Calculus 1000A/B, Calculus 1301A/B, Calculus 1500A/B, Calculus 1501A/B, Mathematics 1225A/B, Mathematics 1230A/B.\n\nExtra Information: 3 lecture hours, 1 tutorial hour. Applied Mathematics 1413 is a suitable prerequisite for any course which lists Calculus 1000A/B plus Calculus 1501A/B. Restricted to students in the Faculty of Engineering.",
+
+
+
+
+"component": "LEC"
+
+
+
+},
+
+
+
+{
+
+
+
+
+"subject": "STATS",
+
+
+
+
+"className": "STATISTICAL CONCEPTS",
+
+
+
+
+"catalog_nbr": "1023A",
+
+
+
+
+"descrip": "An examination of statistical issues aiming towards statistical literacy and appropriate interpretation of statistical information. Common misconceptions will be targeted. Assessment of the validity and treatment of results in popular and scientific media. Conceptual consideration of study design, numerical and graphical data summaries, probability, sampling variability, confidence intervals and hypothesis tests.\n\nAntirequisite(s): Statistical Sciences 2037A/B.\n\nExtra Information: Offered in two formats: 3 lecture hours, or weekly online lectures and 2 in-class lab hours.",
+
+
+
+
+"component": "LAB"
+
+
+
+},
+
+
+
+{
+
+
+
+
+"subject": "STATS",
+
+
+
+
+"className": "STATISTICS FOR HEALTH",
+
+
+
+
+"catalog_nbr": "2037A",
+
+
+
+
+"descrip": "An examination of statistical issues aiming towards statistical literacy and appropriate interpretation of statistical information. Common misconceptions will be targeted. Assessment of the validity and treatment of results in popular and scientific media. Conceptual consideration of study design, numerical and graphical data summaries, probability, sampling variability, confidence intervals and hypothesis tests. Emphasis will be placed on health-related applications.\n\nAntirequisite(s) at Main campus: Statistical Sciences 1023A/B.\nAntirequisite(s) at Huron: All other courses or half courses in Introductory Statistics.\n\nExtra Information: Offered in two formats: 3 lecture hours, or weekly online lectures and 2 in-class lab hours (Main); 3 lecture hours (Huron). \nNote at Main campus: Cannot be taken for credit by students registered in the Faculty of Science and Schulich School of Medicine and Dentistry with the exception of students in Food and Nutrition.",
+
+
+
+
+"component": "TUT"
+
+
+
+}
+
+
+]
+
+},
+
+{
+
+
+"schedule": "wsdfr",
+
+
+"listOfSchedule": [
+
+
+
+{
+
+
+
+
+"subject": "APPLMATH",
+
+
+
+
+"className": "APP MATH FOR ENGRS I",
+
+
+
+
+"catalog_nbr": 1413,
+
+
+
+
+"descrip": "Limits, continuity, differentiation of functions of one variable with applications, extreme values, integration, the fundamental theorem of calculus, methods and applications of integration to areas, volumes and engineering applications. Sequences and series, convergence, power series. Vector functions, partial differential calculus, gradients, directional derivatives and applications.\n \nAntirequisite(s): Calculus 1000A/B, Calculus 1301A/B, Calculus 1500A/B, Calculus 1501A/B, Mathematics 1225A/B, Mathematics 1230A/B.\n\nExtra Information: 3 lecture hours, 1 tutorial hour. Applied Mathematics 1413 is a suitable prerequisite for any course which lists Calculus 1000A/B plus Calculus 1501A/B. Restricted to students in the Faculty of Engineering.",
+
+
+
+
+"component": "LEC"
+
+
+
+},
+
+
+
+{
+
+
+
+
+"subject": "STATS",
+
+
+
+
+"className": "STATISTICS FOR HEALTH",
+
+
+
+
+"catalog_nbr": "2037A",
+
+
+
+
+"descrip": "An examination of statistical issues aiming towards statistical literacy and appropriate interpretation of statistical information. Common misconceptions will be targeted. Assessment of the validity and treatment of results in popular and scientific media. Conceptual consideration of study design, numerical and graphical data summaries, probability, sampling variability, confidence intervals and hypothesis tests. Emphasis will be placed on health-related applications.\n\nAntirequisite(s) at Main campus: Statistical Sciences 1023A/B.\nAntirequisite(s) at Huron: All other courses or half courses in Introductory Statistics.\n\nExtra Information: Offered in two formats: 3 lecture hours, or weekly online lectures and 2 in-class lab hours (Main); 3 lecture hours (Huron). \nNote at Main campus: Cannot be taken for credit by students registered in the Faculty of Science and Schulich School of Medicine and Dentistry with the exception of students in Food and Nutrition.",
+
+
+
+
+"component": "TUT"
+
+
+
+}
+
+
+]
+
+},
+
+{
+
+
+"schedule": "schedule",
+
+
+"listOfSchedule": [
+
+
+
+{
+
+
+
+
+"subject": "APPLMATH",
+
+
+
+
+"className": "APP MATH FOR ENGRS I",
+
+
+
+
+"catalog_nbr": 1413,
+
+
+
+
+"descrip": "Limits, continuity, differentiation of functions of one variable with applications, extreme values, integration, the fundamental theorem of calculus, methods and applications of integration to areas, volumes and engineering applications. Sequences and series, convergence, power series. Vector functions, partial differential calculus, gradients, directional derivatives and applications.\n \nAntirequisite(s): Calculus 1000A/B, Calculus 1301A/B, Calculus 1500A/B, Calculus 1501A/B, Mathematics 1225A/B, Mathematics 1230A/B.\n\nExtra Information: 3 lecture hours, 1 tutorial hour. Applied Mathematics 1413 is a suitable prerequisite for any course which lists Calculus 1000A/B plus Calculus 1501A/B. Restricted to students in the Faculty of Engineering.",
+
+
+
+
+"component": "LEC"
+
+
+
+}
+
+
+]
+
+},
+
+{
+
+
+"schedule": "نطقية فيعرضهم هذا لمواجهة الظروف الأليمة، وأكرر بأنه لا",
+
+
+"listOfSchedule": [
+
+
+
+{
+
+
+
+
+"subject": "APPLMATH",
+
+
+
+
+"className": "APP MATH FOR ENGRS I",
+
+
+
+
+"catalog_nbr": 1413,
+
+
+
+
+"descrip": "Limits, continuity, differentiation of functions of one variable with applications, extreme values, integration, the fundamental theorem of calculus, methods and applications of integration to areas, volumes and engineering applications. Sequences and series, convergence, power series. Vector functions, partial differential calculus, gradients, directional derivatives and applications.\n \nAntirequisite(s): Calculus 1000A/B, Calculus 1301A/B, Calculus 1500A/B, Calculus 1501A/B, Mathematics 1225A/B, Mathematics 1230A/B.\n\nExtra Information: 3 lecture hours, 1 tutorial hour. Applied Mathematics 1413 is a suitable prerequisite for any course which lists Calculus 1000A/B plus Calculus 1501A/B. Restricted to students in the Faculty of Engineering.",
+
+
+
+
+"component": "LEC"
+
+
+
+}
+
+
+]
+
+}
+]
