@@ -2,7 +2,6 @@ const express = require ('express');//Load the express module
 const app = express();//Create an express object, a web application is created
 const fs = require('fs');//Here to read JSON file later asynchronously
 const path = require('path');
-const pug = require('pug');
 const expressSanitizer = require('express-sanitizer');
 var bodyParser = require('body-parser');
 
@@ -35,7 +34,7 @@ app.post('/api/resultList', (req,res) => {
         res.redirect(307,'/api/courses');
     }
 
-    else if(req.sanitize(req.body.courseNumber) == undefined && req.sanitize(req.body.courseComponent) == 'all')
+    else if(req.sanitize(req.body.courseNumber) == undefined)
     {
         res.redirect(307,'/api/subjects');
     }

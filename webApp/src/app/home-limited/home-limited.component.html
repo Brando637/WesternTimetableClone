@@ -17,14 +17,7 @@
             <button mat-raised-button color="lightblue" type="submit">Submit</button>
           </form>
 
-
-          <form fxLayout="column" [formGroup]="createScheduleForm" (ngSubmit)="onCreateSchedule()">
-              <mat-form-field appearance="outline">
-                  <mat-label>Create a new schedule</mat-label>
-                  <input matInput type="text" placeHolder formControlName="scheduleName" name="scheduleName" id="createSchedule">
-              </mat-form-field>
-              <button mat-raised-button color="lightblue" type="submit">Create Schedule</button>
-          </form>
+          <mat-card class="outputNotif" [innerHtml]="htmlToAdd"></mat-card>
     </mat-card>
 
   

@@ -1,10 +1,11 @@
 {
   "name": "se3316-bmichau-lab5",
   "version": "1.0.0",
-  "description": "",
+  "description": "For server operation",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -17,10 +18,8 @@
   },
   "homepage": "https://github.com/Brando637/se3316-bmichau-lab5#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "express-sanitizer": "^1.0.5",
-    "method-override": "^3.0.0",
-    "pug": "^3.0.0",
-    "sanitize": "^2.1.0"
+    "express-sanitizer": "^1.0.5"
   }
 }
