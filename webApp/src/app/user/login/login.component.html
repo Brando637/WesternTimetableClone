@@ -1,18 +1,17 @@
-<div *ngIf="isLoginError" class="red-text center error-message">
-    <i class="material-icons">error</i> Incorrect username or password
-</div>
 <div class=container>
     <mat-card fxFlex="200">
         <mat-toolbar color="lightblue">Login Page</mat-toolbar>
         <form fxLayoutAlign="stretch" fxLayout="column" [formGroup]="loginForm" (ngSubmit)="onLogin()">
             <mat-form-field>
-                <input matInput placeholder="Email" required>
+                <input matInput placeholder="Email" [formControl]="email" required>
+                <mat-error *ngIf="email.invalid">{{ getErrorMessageEmail() }}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Password" required>
+                <input matInput placeholder="Password" [formControl]="password" required>
+                <mat-error *ngIf="password.invalid">{{ getErrorMessage() }}</mat-error>
             </mat-form-field>
-            <button [disabled]="!loginForm.valid" mat-raised-button color="lightblue" type="submit">Login</button>
+            <button mat-raised-button color="lightblue" type="submit">Login</button>
         </form>
     </mat-card>
     

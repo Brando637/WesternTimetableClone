@@ -18,7 +18,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTabsModule} from '@angular/material/tabs';
-import {MatDividerModule} from '@angular/material/divider'
+import {MatDividerModule} from '@angular/material/divider';
+import {MatSelectModule} from '@angular/material/select';
 
 //Login/Register Section
 import { UserComponent } from './user/user.component';
@@ -51,6 +52,7 @@ import { appRoutes } from './routes';
     MatToolbarModule,
     MatTabsModule,
     MatDividerModule,
+    MatSelectModule,
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes)

@@ -3,21 +3,25 @@
         <mat-toolbar color="lightblue">Register Page</mat-toolbar>
         <form fxLayoutAlign="stretch" fxLayout="column" [formGroup]="registerForm" (ngSubmit)="onRegister()">
             <mat-form-field>
-                <input matInput placeholder="Email" required>
+                <input matInput placeholder="Email" [formControl]="email" required>
+                <mat-error *ngIf="email.invalid">{{ getErrorMessageEmail() }}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Password" required>
+                <input matInput placeholder="Password" [formControl]="password" required>
+                <mat-error *ngIf="password.invalid">{{ getErrorMessage() }}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="First Name" required>
+                <input matInput placeholder="First Name" [formControl]="fName" required>
+                <mat-error *ngIf="fName.invalid">{{ getErrorMessage() }}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Re-enter Pasword" required>
+                <input matInput placeholder="Re-enter Pasword" [formControl]="lName" required>
+                <mat-error *ngIf="lName.invalid">{{ getErrorMessage() }}</mat-error>
             </mat-form-field>
-            <button [disabled]="!registerForm.valid" mat-raised-button color="lightblue" type="submit">Register</button>
+            <button mat-raised-button color="lightblue" type="submit">Register</button>
         </form>
     </mat-card>
 </div>

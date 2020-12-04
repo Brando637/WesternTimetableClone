@@ -1,1 +1,31 @@
-<p>home-limited works!</p>
+<div id="pageContainer">
+    <mat-card>
+        <mat-toolbar color="lightblue">Draft My Schedule</mat-toolbar>
+
+        <h1>Search</h1>
+        <form fxLayout="column" [formGroup]="searchCourseForm" (ngSubmit)="onSubmitCourse()">
+            <mat-form-field appearance="outline">
+                <mat-label>Subject</mat-label>
+                <input matInput type="text" placeholder="Enter Subject Name" formControlName="subject" name="subject" id="subject">
+            </mat-form-field>
+              
+            <mat-form-field appearance="outline">
+              <mat-label>Course Number</mat-label>
+              <input matInput type="text" placeHolder="eg. 1001" formControlName="courseNumber" name="courseNumber" id="courseNumber">
+            </mat-form-field>
+
+            <button mat-raised-button color="lightblue" type="submit">Submit</button>
+          </form>
+
+
+          <form fxLayout="column" [formGroup]="createScheduleForm" (ngSubmit)="onCreateSchedule()">
+              <mat-form-field appearance="outline">
+                  <mat-label>Create a new schedule</mat-label>
+                  <input matInput type="text" placeHolder formControlName="scheduleName" name="scheduleName" id="createSchedule">
+              </mat-form-field>
+              <button mat-raised-button color="lightblue" type="submit">Create Schedule</button>
+          </form>
+    </mat-card>
+
+  
+    
