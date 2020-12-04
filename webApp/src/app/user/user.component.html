@@ -1,1 +1,33 @@
-<p>user works!</p>
+<div class="card-tabs" fxLayoutAlign="center center" fxLayout="column">
+    <section>
+        <mat-card>
+            <h1 fxLayoutAlign="center">Welcome to Draft My Schedule</h1>
+            <h2>Please either login, register, or choose to use the limited version</h2>
+        </mat-card>
+    </section>
+    
+    <mat-divider></mat-divider>
+
+    <section>
+        <mat-card>    
+            <nav mat-tab-nav-bar>
+                <a mat-tab-link 
+                *ngFor="let link of navLinks"
+                [routerLink]="link.link"
+                routerLinkActive #rla="routerLinkActive"
+                [active]="rla.isActive">
+                {{link.label}}
+            </a>
+            </nav>
+    
+            <router-outlet></router-outlet>
+        </mat-card>
+    </section>
+    
+    <mat-divider></mat-divider>
+
+    <section>
+        <button mat-raised-button color="amber" class="nav-item nav-link-edit" [routerLink]="['/home-limited']">Limited</button>
+    </section>
+</div>
+

@@ -1,21 +1,21 @@
 {
-  "name": "se3316-bmichau-lab4",
+  "name": "se3316-bmichau-lab5",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Brando637/se3316-bmichau-lab4.git"
+    "url": "git+https://github.com/Brando637/se3316-bmichau-lab5.git"
   },
   "author": "Brandon Michaud",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Brando637/se3316-bmichau-lab4/issues"
+    "url": "https://github.com/Brando637/se3316-bmichau-lab5/issues"
   },
-  "homepage": "https://github.com/Brando637/se3316-bmichau-lab4#readme",
+  "homepage": "https://github.com/Brando637/se3316-bmichau-lab5#readme",
   "dependencies": {
     "express": "^4.17.1",
     "express-sanitizer": "^1.0.5",

@@ -1,18 +1,18 @@
 <div *ngIf="isLoginError" class="red-text center error-message">
     <i class="material-icons">error</i> Incorrect username or password
 </div>
-<div class=container fxLayoutAlign = "center center">
-    <mat-card fxFlex="25">
-        <mat-toolbar color="primary">Login Page</mat-toolbar>
-        <form fxLayoutAlign="stretch" fxLayout="column" [formGroup]="loginForm" (ngSubmit)="onLogin">
+<div class=container>
+    <mat-card fxFlex="200">
+        <mat-toolbar color="lightblue">Login Page</mat-toolbar>
+        <form fxLayoutAlign="stretch" fxLayout="column" [formGroup]="loginForm" (ngSubmit)="onLogin()">
             <mat-form-field>
-                <input matInput placeholder="Username" required>
+                <input matInput placeholder="Email" required>
             </mat-form-field>
 
             <mat-form-field>
                 <input matInput placeholder="Password" required>
             </mat-form-field>
-            <button [disabled]="!loginForm.valid" mat-raised-button type="submit">Login</button>
+            <button [disabled]="!loginForm.valid" mat-raised-button color="lightblue" type="submit">Login</button>
         </form>
     </mat-card>
     

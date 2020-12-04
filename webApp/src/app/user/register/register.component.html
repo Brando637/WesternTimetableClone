@@ -1,1 +1,23 @@
-<p>register works!</p>
+<div class=container>
+    <mat-card fxFlex="200">
+        <mat-toolbar color="lightblue">Register Page</mat-toolbar>
+        <form fxLayoutAlign="stretch" fxLayout="column" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+            <mat-form-field>
+                <input matInput placeholder="Email" required>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Password" required>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="First Name" required>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Re-enter Pasword" required>
+            </mat-form-field>
+            <button [disabled]="!registerForm.valid" mat-raised-button color="lightblue" type="submit">Register</button>
+        </form>
+    </mat-card>
+</div>
