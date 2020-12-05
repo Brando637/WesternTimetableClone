@@ -2,29 +2,40 @@
     <mat-card>
         <mat-toolbar color="lightblue">Draft My Schedule</mat-toolbar>
 
-        <h1>Search</h1>
-        <form fxLayout="column" [formGroup]="searchCourseForm" (ngSubmit)="onSubmitCourse()">
-            <mat-form-field appearance="outline">
-                <mat-label>Subject</mat-label>
-                <input matInput type="text" placeholder="Enter Subject Name" formControlName="subject" name="subject" id="subject">
-            </mat-form-field>
-              
-            <mat-form-field appearance="outline">
-              <mat-label>Course Number</mat-label>
-              <input matInput type="text" placeHolder="eg. 1001" formControlName="courseNumber" name="courseNumber" id="courseNumber">
-            </mat-form-field>
+        <mat-card>
+            <mat-toolbar color="pink">Search</mat-toolbar>
+            <form fxLayout="column" [formGroup]="searchCourseForm" (ngSubmit)="onSubmitCourse()">
+                <mat-form-field appearance="outline">
+                    <mat-label>Subject</mat-label>
+                    <input matInput type="text" placeholder="Enter Subject Name" formControlName="subject" name="subject" id="subject">
+                </mat-form-field>
+                  
+                <mat-form-field appearance="outline">
+                  <mat-label>Course Number</mat-label>
+                  <input matInput type="text" placeHolder="eg. 1001" formControlName="courseNumber" name="courseNumber" id="courseNumber">
+                </mat-form-field>
+    
+                <button mat-raised-button color="lightblue" type="submit">Submit</button>
+            </form>
+        </mat-card>
 
-            
-
-            <button mat-raised-button color="lightblue" type="submit">Submit</button>
-          </form>
-          <form fxLayout="column" [formGroup]="searchCourseFormKey" (ngSubmit)="onSubmitKey()">
-            <mat-form-field appearance="outline">
-                <mat-label>Search by keyword</mat-label>
-                <input matInput type="text" formControlName="keyword" name="keyword" id="keyword">
-            </mat-form-field>
-          </form>
-
+        <mat-card>
+            <mat-toolbar color="pink">Search by keyword</mat-toolbar>
+            <form fxLayout="column" [formGroup]="searchCourseFormKey" (ngSubmit)="onSubmitKey()">
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter keyword</mat-label>
+                    <input matInput type="text" formControlName="keyword" name="keyword" id="keyword">
+                    <mat-error *ngIf="searchCourseFormKey.hasError('minlength')">The value is lower than the minimum</mat-error>
+                </mat-form-field>
+                <button mat-raised-button color="lightblue" type="submit">Submit</button>
+            </form>
+        </mat-card>
+        
+        <mat-card>
+            <mat-toolbar color="pink">Get Public Schedule</mat-toolbar>
+            <button mat-raised-button color="lightblue" (click)="onPublicSchedules()">Get</button>
+        </mat-card>
+        
         <mat-card>
             <mat-slide-toggle [formControl]="enable" (change)="onChange($event)">Expand</mat-slide-toggle>
             <div class="outputNotif" id="outputNotif">

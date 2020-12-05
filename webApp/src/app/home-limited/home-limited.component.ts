@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms'
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpCallsService } from '../http-calls.service';
-import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-home-limited',
@@ -13,6 +13,8 @@ import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-to
 export class HomeLimitedComponent implements OnInit {
 
   searchCourseForm: FormGroup;
+  searchCourseFormKey: FormGroup;
+
   htmlToAdd:SafeHtml;
   htmlToAddFull:SafeHtml;
   responseHolder: object;
@@ -44,15 +46,16 @@ export class HomeLimitedComponent implements OnInit {
       subject:"",
       courseNumber:""
     });
+    this.searchCourseFormKey = this.fb.group({
+      keyword: new FormControl( '', [Validators.minLength(4)] )
+    });
   }
 
   expand(): void {
-    console.log("it works expand");
     this.limited = false;
     this.full = true;
   }
   collapse(): void{
-    console.log("it works collapse");
     this.limited = true;
     this.full = false;
   }
@@ -62,24 +65,68 @@ export class HomeLimitedComponent implements OnInit {
     console.log(this.searchCourseForm.value);
     this.appService.searchCourse(this.searchCourseForm.value).subscribe(
       (response) => {
-        var attachHTML = ""
+        var attachHTML = "";
+        attachHTML = this.parseResultLimited(response);
+        this.htmlToAdd = this.sanitizer.bypassSecurityTrustHtml("<ul class=scheduleList>" + attachHTML + '</ul>');
+        attachHTML = this.parseResultFull(response);
+        this.htmlToAddFull = this.sanitizer.bypassSecurityTrustHtml("<ul class=scheduleList>" + attachHTML + '</ul>');
+      },
+      (error) => console.log("The error returned from the server is" + error)
+    );
+  }
 
-        if (response.includes("Sorry"))
+
+  onSubmitKey(): void{
+    this.appService.searchCourseKeyword(this.searchCourseFormKey.value).subscribe(
+      (response) =>{
+        var attachHTML = "";
+        attachHTML = this.parseResultLimited(response);
+        this.htmlToAdd = this.sanitizer.bypassSecurityTrustHtml("<ul class=scheduleList>" + attachHTML + '</ul>');
+        attachHTML = this.parseResultFull(response);
+        this.htmlToAddFull = this.sanitizer.bypassSecurityTrustHtml("<ul class=scheduleList>" + attachHTML + '</ul>');
+      },
+      (error) => {console.log("The error return from the server is" + error)}
+    );
+  }
+
+  onPublicSchedules(): void{
+    this.appService.getSchedules().subscribe(
+      (response) => {
+
+      },
+      (error) => {}
+    );
+  }
+
+  parseResultLimited(response): string{
+    var attachHTML = ""
+
+    if (response.includes("Sorry")) 
+    {
+      this.htmlToAdd = response;
+    }
+    else 
+    {
+      for (let x in response) 
+      {
+        console.log(response[x]);
+        attachHTML += '<h2>' + response[x].subject + ' - ' + response[x].className + ' ' + response[x].catalog_nbr + '</h2>';
+        attachHTML += '<div class=descrip>' + response[x].catalog_description + '</div>';
+        attachHTML += '<div' + response[x].course_info[0].ssr_component + '>' + response[x].course_info[0].ssr_component + '</div>';
+      }
+    }
+    return attachHTML;
+  }
+
+  parseResultFull(response): string {
+    var attachHTML = ""
+
+    if (response.includes("Sorry"))
         {
           this.htmlToAdd = response;
         }
         else
         {
-          for (let x in response) 
-          {
-            console.log(response[x]);
-            attachHTML += '<h2>' + response[x].subject + ' - ' + response[x].className + ' ' + response[x].catalog_nbr + '</h2>';
-            attachHTML += '<div class=descrip>' + response[x].catalog_description + '</div>';
-            attachHTML += '<div' + response[x].course_info[0].ssr_component + '>' + response[x].course_info[0].ssr_component + '</div>';
-          }
-          this.htmlToAdd = this.sanitizer.bypassSecurityTrustHtml("<ul class=scheduleList>" + attachHTML + '</ul>');
-          attachHTML = "";
-
           for (let x in response)
           {
             attachHTML += '<h2>' + response[x].subject + '' + response[x].catalog_nbr + ' - ' + response[x].className +  '</h2>';
@@ -87,11 +134,7 @@ export class HomeLimitedComponent implements OnInit {
             attachHTML += '<div>'+response[x].course_info[0].class_section+'</div>' + '<div>'+response[x].course_info[0].ssr_component+'</div>' + '<div>'+response[x].course_info[0].class_nbr+'</div>'+'<div>'+response[x].course_info[0].days+'</div>'+'<div>'+response[x].course_info[0].start_time+'</div>'+'<div>'+response[x].course_info[0].end_time+'</div>'+'<div>'+response[x].course_info[0].facility_ID+'</div>'+'<div>'+response[x].course_info[0].instructors+'</div>'+'<div>'+response[x].course_info[0].descrlong+'</div>'+'<div>'+response[x].course_info[0].enrl_stat+'</div>'+'<div>'+response[x].course_info[0].campus+'</div>'+'<div>'+response[x].course_info[0].descr+'</div></div>';
           }
           attachHTML += '</div>';
-          console.log("The response from the server is " + response);
-          this.htmlToAddFull = this.sanitizer.bypassSecurityTrustHtml("<ul class=scheduleList>" + attachHTML + '</ul>');
         }
-      },
-      (error) => console.log("The error returned from the server is" + error)
-    );
+    return attachHTML;
   }
 }

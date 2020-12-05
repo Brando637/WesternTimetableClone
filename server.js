@@ -97,7 +97,7 @@ app.post('/api/courses', (req,res) => {
     for(let i = 0; i < timeTable.length; i++)
     {
         let obj = timeTable[i];
-        if(obj.catalog_nbr.toString() == req.body.courseNumber.toUpperCase())
+        if(obj.catalog_nbr.toString().includes(req.sanitize(req.body.courseNumber.toUpperCase())))
         {
             tempData =
             {
@@ -166,6 +166,53 @@ app.post('/api/subjects/courses', (req,res) => {
         res.status(200).send(testListSubject);
     }
     
+});
+
+app.post('/api/keyword', (req,res) => {
+    let listSubject =[];
+
+    for(let i = 0; i < timeTable.length; i++)
+    {
+        let obj = timeTable[i];
+        if(obj.catalog_nbr.toString().includes(req.sanitize(req.body.keyword.toUpperCase())))
+        {
+            listSubject.push(obj);
+        }
+        if(obj.className.toString().includes(req.sanitize(req.body.keyword.toUpperCase())))
+        {
+            if(listSubject.some(course => course.className == obj.className))
+            {
+                continue;
+            }
+            else
+            {
+                listSubject.push(obj);
+            }
+        }
+        if(req.sanitize(req.body.keyword.toUpperCase()).includes(obj.catalog_nbr.toString()))
+        {
+            if(listSubject.some(course => course.catalog_nbr == obj.catalog_nbr))
+            {
+                continue;
+            }
+            else
+            {
+                listSubject.push(obj);
+            } 
+        }
+        if(req.sanitize(req.body.keyword.toUpperCase()).includes(obj.className.toString()))
+        {
+            if(listSubject.some(course => course.className == obj.className))
+            {
+                continue;
+            }
+            else
+            {
+                listSubject.push(obj);
+            } 
+        }
+    }
+    res.status(200).send(listSubject);
 });
 
 app.post('/api/schedule/:scheduleName', (req, res) => {
@@ -367,6 +414,11 @@ app.get('/api/schedule/:scheduleName', (req, res) => {
     }
     
     
+});
+
+app.get('/api/schedules', (req,res) => {
+    console.log("The req is" + req);
+    res.status(200).send(JSON.stringify("Hello"));
 });
 
 app.post('/api/schedule/:schedulename/:scheduleForm', (req, res) => {

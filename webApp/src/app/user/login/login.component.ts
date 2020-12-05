@@ -42,6 +42,6 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(): void {
-
+    console.log(this.loginForm)
   }
 }
