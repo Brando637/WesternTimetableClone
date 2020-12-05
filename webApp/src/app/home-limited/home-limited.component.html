@@ -14,11 +14,26 @@
               <input matInput type="text" placeHolder="eg. 1001" formControlName="courseNumber" name="courseNumber" id="courseNumber">
             </mat-form-field>
 
+            
+
             <button mat-raised-button color="lightblue" type="submit">Submit</button>
           </form>
+          <form fxLayout="column" [formGroup]="searchCourseFormKey" (ngSubmit)="onSubmitKey()">
+            <mat-form-field appearance="outline">
+                <mat-label>Search by keyword</mat-label>
+                <input matInput type="text" formControlName="keyword" name="keyword" id="keyword">
+            </mat-form-field>
+          </form>
 
-          <mat-card class="outputNotif" [innerHtml]="htmlToAdd"></mat-card>
+        <mat-card>
+            <mat-slide-toggle [formControl]="enable" (change)="onChange($event)">Expand</mat-slide-toggle>
+            <div class="outputNotif" id="outputNotif">
+                <div *ngIf="limited" [innerHtml]="htmlToAdd"></div>
+                <div *ngIf="full" [innerHtml]="htmlToAddFull"></div>
+            </div>
+        </mat-card>
     </mat-card>
+          
 
   
     

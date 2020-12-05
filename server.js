@@ -29,12 +29,12 @@ app.use(expressSanitizer());
 
 app.post('/api/resultList', (req,res) => {
 
-    if(req.sanitize(req.body.subject) == undefined && req.sanitize(req.body.courseComponent) == 'all')
+    if(req.sanitize(req.body.subject) == undefined && req.sanitize(req.body.courseNumber) != undefined)
     {
         res.redirect(307,'/api/courses');
     }
 
-    else if(req.sanitize(req.body.courseNumber) == undefined)
+    else if(req.sanitize(req.body.courseNumber) == undefined && req.sanitize(req.body.subject) != undefined)
     {
         res.redirect(307,'/api/subjects');
     }
@@ -49,16 +49,6 @@ app.post('/api/resultList', (req,res) => {
         res.redirect(307,'/api/subjects/courses/lec');
     }
 
-    else if (req.sanitize(req.body.courseNumber) != undefined && req.sanitize(req.body.courseComponent) == 'tut')
-    {
-        res.redirect(307,'/api/subjects/courses/tut');
-    }
-
-    else if (req.sanitize(req.body.courseNumber) != undefined && req.sanitize(req.body.courseComponent) == 'lab')
-    {
-        res.redirect(307,'/api/subjects/courses/lab');
-    }
-
 });
 
 
@@ -66,6 +56,7 @@ app.post('/api/resultList', (req,res) => {
 app.post('/api/subjects', (req,res) => {
 
     let listSubject = [];
+    let testListSubject = [];
 
     for (let i = 0; i < timeTable.length; i++)
     {
@@ -81,7 +72,7 @@ app.post('/api/subjects', (req,res) => {
                 component: obj.course_info[0].ssr_component, 
             }
             listSubject.push(tempData);//This pushes the entire object from the JSON file
-            
+            testListSubject.push(obj);
         }
     }
 
@@ -94,13 +85,14 @@ app.post('/api/subjects', (req,res) => {
     else
     {
         //res.render('indexResults', {listSubject: listSubject, make: false, make2: true});
-        res.status(200).send(listSubject);
+        res.status(200).send(testListSubject);
     }
 });
 
 app.post('/api/courses', (req,res) => {
 
     let listSubject =[];
+    let testListSubject =[];
 
     for(let i = 0; i < timeTable.length; i++)
     {
@@ -116,6 +108,7 @@ app.post('/api/courses', (req,res) => {
                 component: obj.course_info[0].ssr_component, 
             }
             listSubject.push(tempData);//This pushes the entire object from the JSON file
+            testListSubject.push(obj);
         }
 
     }
@@ -129,13 +122,14 @@ app.post('/api/courses', (req,res) => {
     else
     {
         //res.render('indexResults', {listSubject: listSubject, make: false, make2: true});
-        res.status(200).send(listSubject);
+        res.status(200).send(testListSubject);
     }
 });
 
 app.post('/api/subjects/courses', (req,res) => {
 
     let listSubject =[];
+    let testListSubject =[];
 
     for(let i = 0; i < timeTable.length; i++)
     {
@@ -154,6 +148,7 @@ app.post('/api/subjects/courses', (req,res) => {
                     component: obj.course_info[0].ssr_component,
                 }
                 listSubject.push(tempData);//This pushes the entire object from the JSON file
+                testListSubject.push(obj);
             }
         }
         
@@ -168,136 +163,7 @@ app.post('/api/subjects/courses', (req,res) => {
     else
     {
         //res.render('indexResults', {listSubject: listSubject, make: false, make2: true});
-        res.status(200).send(listSubject);
-    }
-    
-});
-
-app.post('/api/subjects/courses/lec', (req,res) => {
-
-    let listSubject =[];
-
-    for(let i = 0; i < timeTable.length; i++)
-    {
-        let obj = timeTable[i];
-        
-        if(obj.subject == req.sanitize(req.body.subject.toUpperCase()))
-        {
-            if (obj.catalog_nbr.toString().includes(req.sanitize(req.body.courseNumber.toUpperCase()))) 
-            {
-                if(obj.course_info[0].ssr_component == req.sanitize(req.body.courseComponent.toUpperCase()))
-                {
-                    tempData =
-                    {
-                        subject: obj.subject,
-                        className: obj.className,
-                        catalog_nbr: obj.catalog_nbr,
-                        descrip: obj.catalog_description,
-                        component: obj.course_info[0].ssr_component,
-                    }
-                    listSubject.push(tempData);//This pushes the entire object from the JSON file
-                }
-            }
-        }
-        
-    }
-
-    if(listSubject === undefined || listSubject.length == 0)
-    {
-        //res.render('indexError',{errorNum: 0});        
-        res.status(200).send(JSON.stringify("Sorry, but the searched course does not exist"));
-    }
-
-    else
-    {
-        //res.render('indexResults', {listSubject: listSubject, make: false, make2: true});
-        res.status(200).send(listSubject);
-    }
-    
-});
-
-app.post('/api/subjects/courses/tut', (req,res) => {
-
-    let listSubject =[];
-
-    for(let i = 0; i < timeTable.length; i++)
-    {
-        let obj = timeTable[i];
-
-        if(obj.subject == req.sanitize(req.body.subject.toUpperCase()))
-        {
-            if (obj.catalog_nbr.toString().includes(req.sanitize(req.body.courseNumber.toUpperCase()))) 
-            {
-                if(obj.course_info[0].ssr_component == req.sanitize(req.body.courseComponent.toUpperCase()))
-                {
-                    tempData =
-                    {
-                        subject: obj.subject,
-                        className: obj.className,
-                        catalog_nbr: obj.catalog_nbr,
-                        descrip: obj.catalog_description,
-                        component: obj.course_info[0].ssr_component,
-                    }
-                    listSubject.push(tempData);//This pushes the entire object from the JSON file
-                }
-            }
-        }
-
-    }
-
-    if(listSubject === undefined || listSubject.length == 0)
-    {
-        //res.render('indexError',{errorNum: 0});
-        res.status(200).send(JSON.stringify("Sorry, but the course could not be found"));
-    }
-
-    else
-    {
-        //res.render('indexResults', {listSubject: listSubject, make: false, make2: true});
-        res.status(200).send(listSubject);
-    }
-    
-});
-
-app.post('/api/subjects/courses/lab', (req,res) => {
-
-    let listSubject =[];
-
-    for(let i = 0; i < timeTable.length; i++)
-    {
-        let obj = timeTable[i];
-        
-        if(obj.subject == req.sanitize(req.body.subject.toUpperCase()))
-        {
-            if (obj.catalog_nbr.toString().includes(req.sanitize(req.body.courseNumber.toUpperCase()))) 
-            {
-                if(obj.course_info[0].ssr_component == req.sanitize(req.body.courseComponent.toUpperCase()))
-                {
-                    tempData =
-                    {
-                        subject: obj.subject,
-                        className: obj.className,
-                        catalog_nbr: obj.catalog_nbr,
-                        descrip: obj.catalog_description,
-                        component: obj.course_info[0].ssr_component,
-                    }
-                    listSubject.push(tempData);//This pushes the entire object from the JSON file
-                }
-            }
-        }
-
-    }
-
-    if(listSubject === undefined || listSubject.length == 0)
-    {
-        //res.render('indexError',{errorNum: 0});
-        res.status(200).send(JSON.stringify("Sorry, but the course could not be found"));
-    }
-
-    else
-    {
-        //res.render('indexResults', {listSubject: listSubject, make: false, make2: true});
-        res.status(200).send(listSubject);
+        res.status(200).send(testListSubject);
     }
     
 });

@@ -20,6 +20,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatSelectModule} from '@angular/material/select';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle'
 
 //Login/Register Section
 import { UserComponent } from './user/user.component';
@@ -53,6 +55,8 @@ import { appRoutes } from './routes';
     MatTabsModule,
     MatDividerModule,
     MatSelectModule,
+    MatExpansionModule,
+    MatSlideToggleModule,
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes)
