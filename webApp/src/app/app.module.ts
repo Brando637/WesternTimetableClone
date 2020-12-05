@@ -31,6 +31,9 @@ import { HomeLimitedComponent } from './home-limited/home-limited.component';
 import { HomeFullComponent } from './home-full/home-full.component';
 
 import { appRoutes } from './routes';
+import { SecAndPrivComponent } from './policy/sec-and-priv/sec-and-priv.component';
+import { AccUsePoliComponent } from './policy/acc-use-poli/acc-use-poli.component';
+import { DmcaNotTakPoliComponent } from './policy/dmca-not-tak-poli/dmca-not-tak-poli.component';
 
 
 @NgModule({
@@ -40,7 +43,10 @@ import { appRoutes } from './routes';
     UserComponent,
     RegisterComponent,
     HomeLimitedComponent,
-    HomeFullComponent
+    HomeFullComponent,
+    SecAndPrivComponent,
+    AccUsePoliComponent,
+    DmcaNotTakPoliComponent
   ],
   imports: [
     BrowserModule,
