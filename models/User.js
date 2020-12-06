@@ -24,6 +24,10 @@ const UserSchema = new mongoose.Schema({
     administrator:{
         type: Boolean,
         default: false
+    },
+    confirmed: {
+        type: Boolean,
+        default: false
     }
 });
 

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthenticateService } from 'src/app/authenticate.service';
+import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,7 @@ import { AuthenticateService } from 'src/app/authenticate.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  htmlToAdd: SafeHtml;
 
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthenticateService) { }
 
@@ -36,12 +38,17 @@ export class LoginComponent implements OnInit {
         (response) => {
           if(response.success)
           {
-
+            this.authService.setUserInfo({'user' : response['user']});
+            this.router.navigate(['home-full']);
+          }
+          else
+          {
+            this.htmlToAdd = '<h2>'+response.msg +'</h2>' 
           }
 
         },
         (error) => {
-          console.log("Error")
+          console.log(error)
         }
       )
     }

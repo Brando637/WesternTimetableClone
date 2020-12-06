@@ -7,8 +7,9 @@ import { SecAndPrivComponent } from './policy/sec-and-priv/sec-and-priv.componen
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { UserComponent } from './user/user.component';
+import { AuthGuardService as AuthGuard } from './auth-guard.service';
 export const appRoutes: Routes = [
-    { path: 'home-full', component: HomeFullComponent, /*canActivate:[AuthGuard]*/ },
+    { path: 'home-full', component: HomeFullComponent, canActivate:[AuthGuard] },
     { path: 'home-limited', component: HomeLimitedComponent},
     {
         path: 'login', component:UserComponent,

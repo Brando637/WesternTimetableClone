@@ -5,6 +5,12 @@ const path = require('path');
 const expressSanitizer = require('express-sanitizer');
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+
+//Passport Config
+require('./config/passport')(passport);
 
 //DB Config
 const db = require('./config/keys').MongoURI;
@@ -21,12 +27,6 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));//We make a place for the server to start listening on a port
 
-
-//app.set('view engine', 'pug')
-//app.set('views', path.join(__dirname, 'views'));
-//app.use(express.static(path.join(__dirname, 'public')));
-
-
 //Homepage 
 app.get('/', (req, res) => {
     res.sendFile(process.cwd()+"/indexApp/dist/indexApp/index.html");
@@ -36,15 +36,49 @@ app.get('/', (req, res) => {
 //We need to add the JSON file that we will parse through
 const timeTable = require('./Lab3-timetable-data.json');
 
+//Express Session
+app.use(session({ secret: 'secret', resave: true, saveUninitialized: true}))
+
 //Take the body from the form and parse it out so we can use the form information 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressSanitizer());
 
-app.post('/api/user/login', (req,res) => {
-    console.log(req.body);
-    res.send('hello');
-})
+const auth = () => {
+    return (req, res, next) => {
+        passport.authenticate('local', (error, user, info) => {
+            if(user == false && info.message == "That email is not registered in the database")
+            {
+                res.status(200).send(JSON.stringify({"success": false, info}));
+            }
+            if(user == false && info.message == "Password Incorrect")
+            {
+                res.status(200).send(JSON.stringify({ success: false, msg: info.message }))
+            }
+            req.login(user, function(error) {
+                if (error) return next(error);
+                next();
+            });
+        })(req, res, next)
+    }
+}
+
+//Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+const isLoggedIn = (req, res, next)  => {
+    if(req.isAuthenticated()){
+        return next()
+    }
+    return res.status(400).json({"statusCode": 400, "message": " not authenticated"})
+}
+
+
+
+app.post('/api/user/login', auth(), (req,res) => {
+    res.status(200).json({'success': true});
+});
 
 app.post('/api/user/register', (req,res) => {
     let resArray = [];
@@ -78,7 +112,7 @@ app.post('/api/user/register', (req,res) => {
                     });
 
                     console.log(newUser);
-                    resArray.push({success: true, msg:'The user has been registered'})
+                    resArray.push({success: true, msg:'The user has been registered. Please login now.'})
                     newUser.save()
                         .then(user => {
                             res.status(200).send(resArray);
@@ -86,8 +120,6 @@ app.post('/api/user/register', (req,res) => {
                         .catch(err => console.log(err));
                 }
             });
-            
-       
     }
 })
 
