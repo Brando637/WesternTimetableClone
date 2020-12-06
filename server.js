@@ -9,6 +9,9 @@ const mongoose = require('mongoose');
 //DB Config
 const db = require('./config/keys').MongoURI;
 
+//User Model
+const User = require('./models/User');
+
 //Connect to Mongo
 mongoose.connect(db, { useNewUrlParser: true })
     .then(() => console.log('MongoDB Connected...'))
@@ -44,8 +47,48 @@ app.post('/api/user/login', (req,res) => {
 })
 
 app.post('/api/user/register', (req,res) => {
-    console.log(req.body);
-    res.send('hello');
+    let resArray = [];
+    const  { fName, email, password, password2 } = req.body;
+    //Check if passwords match
+    if(password !== password2)
+    {
+        resArray.push({success: false, msg: 'Passwords do not match'});
+    }
+
+
+    if(resArray.length > 0)
+    {
+        res.status(200).send(resArray);
+    }
+    else
+    {
+        User.findOne({ email: email})
+            .then(user => {
+                if(user)
+                {
+                    resArray.push({success: false, msg: 'The user already exists'})
+                    res.status(200).send(resArray);
+                }
+                else
+                {
+                    const newUser = new User({
+                        fName,
+                        email,
+                        password
+                    });
+
+                    console.log(newUser);
+                    resArray.push({success: true, msg:'The user has been registered'})
+                    newUser.save()
+                        .then(user => {
+                            res.status(200).send(resArray);
+                        })
+                        .catch(err => console.log(err));
+                }
+            });
+            
+       
+    }
 })
 
 app.post('/api/resultList', (req,res) => {

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthenticateService } from 'src/app/authenticate.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-register',
@@ -11,8 +12,9 @@ import { AuthenticateService } from 'src/app/authenticate.service';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
+  htmlToAdd:SafeHtml;
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthenticateService) { }
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthenticateService, private sanitizer: DomSanitizer) { }
 
   public hasError = (controlName: string, errorName: string) => {
     return this.registerForm.controls[controlName].hasError(errorName);
@@ -36,8 +38,14 @@ export class RegisterComponent implements OnInit {
     {
       this.authService.register(this.registerForm.value).subscribe(
         (response) => {
-          if(true){
-            console.log(response);
+          if(response[0].success == true)
+          {
+            this.htmlToAdd = '<h2>'+response[0].msg+'</h2>';
+          }
+
+          if(response[0].success == false)
+          {
+            this.htmlToAdd = '<h2>'+response[0].msg+'</h2>';
           }
         },
         (error) => {
