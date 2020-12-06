@@ -1,9 +1,58 @@
-<mat-form-field appearance="outline">
-    <mat-label>Component</mat-label>
-    <mat-select formControlName="courseComponent" name="courseComponent" id="courseComponent">
-        <mat-option value="all"> All </mat-option>
-        <mat-option value="lec"> Lecture </mat-option>
-        <mat-option value="tut"> Tutorial </mat-option>
-        <mat-option value="lab"> Laboratory </mat-option>
-    </mat-select>
-</mat-form-field>
+<div id="pageContainer">
+    <mat-card>
+        <mat-toolbar color="lightblue">Draft My Schedule</mat-toolbar>
+
+        <mat-card>
+            <mat-toolbar color="pink">Search</mat-toolbar>
+            <form fxLayout="column" [formGroup]="searchCourseForm" (ngSubmit)="onSubmitCourse()">
+                <mat-form-field appearance="outline">
+                    <mat-label>Subject</mat-label>
+                    <input matInput type="text" placeholder="Enter Subject Name" formControlName="subject" name="subject" id="subject">
+                </mat-form-field>
+                  
+                <mat-form-field appearance="outline">
+                  <mat-label>Course Number</mat-label>
+                  <input matInput type="text" placeHolder="eg. 1001" formControlName="courseNumber" name="courseNumber" id="courseNumber">
+                </mat-form-field>
+    
+                <button mat-raised-button color="lightblue" type="submit">Submit</button>
+            </form>
+        </mat-card>
+
+        <mat-card>
+            <mat-toolbar color="pink">Search by keyword</mat-toolbar>
+            <form fxLayout="column" [formGroup]="searchCourseFormKey" (ngSubmit)="onSubmitKey()">
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter keyword</mat-label>
+                    <input matInput type="text" formControlName="keyword" name="keyword" id="keyword">
+                    <mat-error *ngIf="searchCourseFormKey.hasError('minlength')">The value is lower than the minimum</mat-error>
+                </mat-form-field>
+                <button mat-raised-button color="lightblue" type="submit">Submit</button>
+            </form>
+        </mat-card>
+
+        <mat-card>
+            <mat-toolbar color="pink">Delete a Schedule</mat-toolbar>
+            <form [formGroup]="deleteScheduleForm" (ngSubmit)="onDeleteSchedule()">
+                <mat-form-field>
+                    <mat-label>Delete a schedule in the database</mat-label>
+                    <input matInput type="text" formControlName="deleteSchedule" name="deleteSchedule" id="deleteSchedule">
+                </mat-form-field>
+                <button mat-raised-button color="lightblue" type="submit">Submit</button>
+            </form>
+        </mat-card>
+        
+        <mat-card>
+            <mat-toolbar color="pink">Get Public Schedule</mat-toolbar>
+            <button mat-raised-button color="lightblue" (click)="onPublicSchedules()">Get</button>
+        </mat-card>
+        
+        <mat-card>
+            <mat-slide-toggle [formControl]="enable" (change)="onChange($event)">Expand</mat-slide-toggle>
+            <div class="outputNotif" id="outputNotif">
+                <div *ngIf="limited" [innerHtml]="htmlToAdd"></div>
+                <div *ngIf="full" [innerHtml]="htmlToAddFull"></div>
+            </div>
+        </mat-card>
+    </mat-card>
+</div>

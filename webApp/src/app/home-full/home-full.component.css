@@ -1,0 +1,15 @@
+.mat-lightblue{
+    background-color: #03a9f4;
+    color: #fff;
+}
+
+.mat-pink{
+    background-color: #e91e63;
+    color: #fff;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto;
+    grid-gap: 20px;
+    background-color: #03a9f4;
+}
