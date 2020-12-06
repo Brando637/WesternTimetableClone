@@ -4,6 +4,15 @@ const fs = require('fs');//Here to read JSON file later asynchronously
 const path = require('path');
 const expressSanitizer = require('express-sanitizer');
 var bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+//DB Config
+const db = require('./config/keys').MongoURI;
+
+//Connect to Mongo
+mongoose.connect(db, { useNewUrlParser: true })
+    .then(() => console.log('MongoDB Connected...'))
+    .catch(err => console.log(err));
 
 const PORT = process.env.PORT || 3000;
 
@@ -20,13 +29,7 @@ app.get('/', (req, res) => {
     res.sendFile(process.cwd()+"/indexApp/dist/indexApp/index.html");
 });
 
-app.get('/api/user/login', (req,res) => {
 
-})
-
-app.get('/api/user/register', (req,res) => {
-    
-})
 //We need to add the JSON file that we will parse through
 const timeTable = require('./Lab3-timetable-data.json');
 
@@ -34,6 +37,16 @@ const timeTable = require('./Lab3-timetable-data.json');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressSanitizer());
+
+app.post('/api/user/login', (req,res) => {
+    console.log(req.body);
+    res.send('hello');
+})
+
+app.post('/api/user/register', (req,res) => {
+    console.log(req.body);
+    res.send('hello');
+})
 
 app.post('/api/resultList', (req,res) => {
 
@@ -62,7 +75,6 @@ app.post('/api/resultList', (req,res) => {
 
 //Will return all subject codes along with their appropriate classname  and descriptions
 app.post('/api/subjects', (req,res) => {
-
     let listSubject = [];
     let testListSubject = [];
 

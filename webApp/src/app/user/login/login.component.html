@@ -3,13 +3,14 @@
         <mat-toolbar color="lightblue">Login Page</mat-toolbar>
         <form fxLayoutAlign="stretch" fxLayout="column" [formGroup]="loginForm" (ngSubmit)="onLogin()">
             <mat-form-field>
-                <input matInput placeholder="Email" [formControl]="email" required>
-                <mat-error *ngIf="email.invalid">{{ getErrorMessageEmail() }}</mat-error>
+                <input matInput placeholder="Email" formControlName="email" required>
+                <mat-error *ngIf="hasError('email', 'email')">Not a valid email</mat-error>
+                <mat-error *ngIf="hasError('email', 'required')">You must enter a value</mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Password" [formControl]="password" required>
-                <mat-error *ngIf="password.invalid">{{ getErrorMessage() }}</mat-error>
+                <input matInput placeholder="Password" formControlName="password" required>
+                <mat-error *ngIf="hasError('password', 'required')">You must enter a value</mat-error>
             </mat-form-field>
             <button mat-raised-button color="lightblue" type="submit">Login</button>
         </form>

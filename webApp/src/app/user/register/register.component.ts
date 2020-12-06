@@ -11,36 +11,11 @@ import { AuthenticateService } from 'src/app/authenticate.service';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
-  
-  //FormControls to check that a value has been entered into each field of the form
-  email= new FormControl('', [Validators.required, Validators.email]);
-  password= new FormControl('', [Validators.required]);
-  fName= new FormControl('', [Validators.required]);
-  lName= new FormControl('', [Validators.required]);
 
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthenticateService) { }
 
-  getErrorMessageEmail() {
-    if(this.email.hasError('required'))
-    {
-      return "You must enter a value";
-    }
-    return this.email.hasError('email') ? 'Not a valid email' : '';
-  }
-
-  getErrorMessage(){
-    if(this.password.hasError('required'))
-    {
-      return "You must enter a value";
-    }
-    if(this.fName.hasError('required'))
-    {
-      return "You must enter a value;"
-    }
-    if(this.lName.hasError('required'))
-    {
-      return "You must enter a value;"
-    }
+  public hasError = (controlName: string, errorName: string) => {
+    return this.registerForm.controls[controlName].hasError(errorName);
   }
 
   ngOnInit(): void {
@@ -49,7 +24,10 @@ export class RegisterComponent implements OnInit {
 
   initializeForm(): void {
     this.registerForm = this.fb.group({
-
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required]),
+      fName: new FormControl('', [Validators.required]),
+      password2:  new FormControl('', [Validators.required]) 
     });
   }
 
@@ -58,9 +36,12 @@ export class RegisterComponent implements OnInit {
     {
       this.authService.register(this.registerForm.value).subscribe(
         (response) => {
-          if(response.success){
-
+          if(true){
+            console.log(response);
           }
+        },
+        (error) => {
+          console.log("Error")
         }
       )
     }

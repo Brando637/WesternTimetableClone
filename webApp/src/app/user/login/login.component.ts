@@ -12,24 +12,10 @@ import { AuthenticateService } from 'src/app/authenticate.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
-  email= new FormControl('', [Validators.required, Validators.email]);
-  password= new FormControl('', [Validators.required]);
-
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthenticateService) { }
 
-  getErrorMessageEmail() {
-    if(this.email.hasError('required'))
-    {
-      return "You must enter a value";
-    }
-    return this.email.hasError('email') ? 'Not a valid email' : '';
-  }
-
-  getErrorMessage() {
-    if(this.password.hasError('required'))
-    {
-      return "You must enter a value";
-    }
+  public hasError = (controlName: string, errorName: string) => {
+    return this.loginForm.controls[controlName].hasError(errorName);
   }
 
   ngOnInit(): void {
@@ -38,7 +24,8 @@ export class LoginComponent implements OnInit {
 
   initializeForm(): void {
     this.loginForm = this.fb.group({
-
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('',[Validators.required])
     });
   }
 

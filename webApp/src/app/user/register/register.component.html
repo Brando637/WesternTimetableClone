@@ -3,23 +3,24 @@
         <mat-toolbar color="lightblue">Register Page</mat-toolbar>
         <form fxLayoutAlign="stretch" fxLayout="column" [formGroup]="registerForm" (ngSubmit)="onRegister()">
             <mat-form-field>
-                <input matInput placeholder="Email" [formControl]="email" required>
-                <mat-error *ngIf="email.invalid">{{ getErrorMessageEmail() }}</mat-error>
+                <input matInput placeholder="Email" formControlName="email" required>
+                <mat-error *ngIf="hasError('email', 'email')">Not a valid email</mat-error>
+                <mat-error *ngIf="hasError('email', 'required')">You must enter a value</mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Password" [formControl]="password" required>
-                <mat-error *ngIf="password.invalid">{{ getErrorMessage() }}</mat-error>
+                <input matInput placeholder="Password" formControlName="password" required>
+                <mat-error *ngIf="hasError('password', 'required')">You must enter a value</mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="First Name" [formControl]="fName" required>
-                <mat-error *ngIf="fName.invalid">{{ getErrorMessage() }}</mat-error>
+                <input matInput placeholder="First Name" formControlName="fName" required>
+                <mat-error *ngIf="hasError('fName', 'required')">You must enter a value</mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Re-enter Pasword" [formControl]="lName" required>
-                <mat-error *ngIf="lName.invalid">{{ getErrorMessage() }}</mat-error>
+                <input matInput placeholder="Re-enter Pasword" formControlName="password2" required>
+                <mat-error *ngIf="hasError('password2', 'required')">You must enter a value</mat-error>
             </mat-form-field>
             <button mat-raised-button color="lightblue" type="submit">Register</button>
         </form>
