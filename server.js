@@ -5,8 +5,9 @@ const path = require('path');
 const expressSanitizer = require('express-sanitizer');
 var bodyParser = require('body-parser');
 
+const PORT = process.env.PORT || 3000;
 
-app.listen(3000, () => console.log("Listening on port 3000") )//We make a place for the server to start listening on a port
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));//We make a place for the server to start listening on a port
 
 
 //app.set('view engine', 'pug')
@@ -19,6 +20,13 @@ app.get('/', (req, res) => {
     res.sendFile(process.cwd()+"/indexApp/dist/indexApp/index.html");
 });
 
+app.get('/api/user/login', (req,res) => {
+
+})
+
+app.get('/api/user/register', (req,res) => {
+    
+})
 //We need to add the JSON file that we will parse through
 const timeTable = require('./Lab3-timetable-data.json');
 

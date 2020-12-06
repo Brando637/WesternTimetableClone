@@ -32,10 +32,21 @@
         </mat-card>
 
         <mat-card>
+            <mat-toolbar color="pink">Create a Schedule</mat-toolbar>
+            <form [formGroup]="createSchedule" (ngSubmit)="onSubmitSchedule()">
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter the name of the schedule</mat-label>
+                    <input matInput type="text" formControlName="scheduleName" name="scheduleName" id="scheduleName">
+                </mat-form-field>
+                <button mat-raised-button color="lightblue" type="submit">Submit</button>
+            </form>
+        </mat-card>
+
+        <mat-card>
             <mat-toolbar color="pink">Delete a Schedule</mat-toolbar>
             <form [formGroup]="deleteScheduleForm" (ngSubmit)="onDeleteSchedule()">
                 <mat-form-field>
-                    <mat-label>Delete a schedule in the database</mat-label>
+                    <mat-label>Enter the name of the schedule</mat-label>
                     <input matInput type="text" formControlName="deleteSchedule" name="deleteSchedule" id="deleteSchedule">
                 </mat-form-field>
                 <button mat-raised-button color="lightblue" type="submit">Submit</button>

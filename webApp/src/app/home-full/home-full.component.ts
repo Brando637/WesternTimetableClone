@@ -15,6 +15,7 @@ export class HomeFullComponent implements OnInit {
   deleteScheduleForm: FormGroup;
   searchCourseForm: FormGroup;
   searchCourseFormKey: FormGroup;
+  createSchedule: FormGroup;
 
   htmlToAdd:SafeHtml;
   htmlToAddFull:SafeHtml;
@@ -52,6 +53,9 @@ export class HomeFullComponent implements OnInit {
     this.deleteScheduleForm = this.fb.group({
       deleteSchedule:""
     });
+    this.createSchedule = this.fb.group({
+      scheduleName:""
+    })
   }
 
   expand(): void {
@@ -63,12 +67,20 @@ export class HomeFullComponent implements OnInit {
     this.full = false;
   }
 
+  onSubmitSchedule(): void {
+    this.appService.createSchedule(this.createSchedule.value, this.createSchedule.value.scheduleName).subscribe(
+      (response) => {},
+      (error) => {}
+    );
+  }
+
   onDeleteSchedule(): void {
     console.log(this.deleteScheduleForm.value);
     this.appService.deleteSchedule(this.deleteScheduleForm.value.deleteSchedule).subscribe(
       (response) => {
         console.log("The response from the server is " + response)
         this.htmlToAdd = '<h2>'+response.toString()+'</h2>';
+        this.htmlToAddFull = '<h2>'+response.toString()+'</h2>';
       },
       (error) => console.log("The error returned from the server is" + error)
     );

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthenticateService } from 'src/app/authenticate.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
   email= new FormControl('', [Validators.required, Validators.email]);
   password= new FormControl('', [Validators.required]);
 
-  constructor(private fb: FormBuilder, private router: Router) { }
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthenticateService) { }
 
   getErrorMessageEmail() {
     if(this.email.hasError('required'))
@@ -42,6 +43,16 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(): void {
-    console.log(this.loginForm)
-  }
+    if(this.loginForm.valid)
+    {
+      this.authService.login(this.loginForm.value).subscribe(
+        (response) => {
+          if(response.success)
+          {
+
+          }
+        }
+      )
+    }
+    }
 }

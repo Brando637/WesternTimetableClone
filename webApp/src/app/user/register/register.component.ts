@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthenticateService } from 'src/app/authenticate.service';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +18,7 @@ export class RegisterComponent implements OnInit {
   fName= new FormControl('', [Validators.required]);
   lName= new FormControl('', [Validators.required]);
 
-  constructor(private fb: FormBuilder, private router: Router) { }
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthenticateService) { }
 
   getErrorMessageEmail() {
     if(this.email.hasError('required'))
@@ -53,7 +54,16 @@ export class RegisterComponent implements OnInit {
   }
 
   onRegister(): void {
+    if(this.registerForm.valid)
+    {
+      this.authService.register(this.registerForm.value).subscribe(
+        (response) => {
+          if(response.success){
 
+          }
+        }
+      )
+    }
   }
 
 }
