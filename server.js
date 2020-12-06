@@ -49,11 +49,15 @@ const auth = () => {
         passport.authenticate('local', (error, user, info) => {
             if(user == false && info.message == "That email is not registered in the database")
             {
-                res.status(200).send(JSON.stringify({"success": false, info}));
+                res.status(200).send(JSON.stringify({"success": false, msg: info.message }));
             }
             if(user == false && info.message == "Password Incorrect")
             {
-                res.status(200).send(JSON.stringify({ success: false, msg: info.message }))
+                res.status(200).send(JSON.stringify({ success: false, msg: info.message }));
+            }
+            if(user == false && info.message == "The account has been de-activated. Please contact the administrator")
+            {
+                res.status(200).send(JSON.stringify({ success: false, msg: info.message }));
             }
             req.login(user, function(error) {
                 if (error) return next(error);
@@ -68,7 +72,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const isLoggedIn = (req, res, next)  => {
-    if(req.isAuthenticated()){
+    if(req.isAuthenticated())
+    {
         return next()
     }
     return res.status(400).json({"statusCode": 400, "message": " not authenticated"})
@@ -77,7 +82,8 @@ const isLoggedIn = (req, res, next)  => {
 
 
 app.post('/api/user/login', auth(), (req,res) => {
-    res.status(200).json({'success': true});
+    let email = req.body.email;
+    res.status(200).json({'success': true, userID: email});
 });
 
 app.post('/api/user/register', (req,res) => {
@@ -310,11 +316,26 @@ app.post('/api/keyword', (req,res) => {
     res.status(200).send(listSubject);
 });
 
+//Create a new schedule
 app.post('/api/schedule/:scheduleName', (req, res) => {
     let base = require('./schedule-dataTemplate.json');
     let data = require('./schedule-data.json');
 
-    base.schedule = req.sanitize(req.body.scheduleName);
+    if(req.sanitize(req.body.userID) !== undefined)
+    {
+        base.schedule = req.sanitize(req.body.scheduleName);
+    }
+    if(req.sanitize(req.body.description) !== undefined)
+    {
+        base.description = req.sanitize(req.body.description);
+    }
+
+    if(req.sanitize(req.body.visibility) !== undefined)
+    {
+        base.status = req.sanitize(req.body.visibility);
+    }
+    let date = new Date();
+    base.lastModDate = date.toString();
 
     /*Need to check if the entered schedule already exists
     If it does already exist then we need to inform the user
@@ -512,8 +533,13 @@ app.get('/api/schedule/:scheduleName', (req, res) => {
 });
 
 app.get('/api/schedules', (req,res) => {
-    console.log("The req is" + req);
-    res.status(200).send(JSON.stringify("Hello"));
+    let data = require('./schedule-data.json');
+    let listSubject =[];
+
+    for(x in data)
+    {
+        
+    }
 });
 
 app.post('/api/schedule/:schedulename/:scheduleForm', (req, res) => {

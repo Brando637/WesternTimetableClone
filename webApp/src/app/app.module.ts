@@ -34,6 +34,7 @@ import { appRoutes } from './routes';
 import { SecAndPrivComponent } from './policy/sec-and-priv/sec-and-priv.component';
 import { AccUsePoliComponent } from './policy/acc-use-poli/acc-use-poli.component';
 import { DmcaNotTakPoliComponent } from './policy/dmca-not-tak-poli/dmca-not-tak-poli.component';
+import { AdministratorComponent } from './user/administrator/administrator.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { DmcaNotTakPoliComponent } from './policy/dmca-not-tak-poli/dmca-not-tak
     HomeFullComponent,
     SecAndPrivComponent,
     AccUsePoliComponent,
-    DmcaNotTakPoliComponent
+    DmcaNotTakPoliComponent,
+    AdministratorComponent
   ],
   imports: [
     BrowserModule,

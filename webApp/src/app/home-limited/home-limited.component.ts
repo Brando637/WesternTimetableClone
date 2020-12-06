@@ -39,6 +39,7 @@ export class HomeLimitedComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    this.onPublicSchedules();
   }
 
   initializeForm(): void {

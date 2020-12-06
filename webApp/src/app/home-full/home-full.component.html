@@ -34,10 +34,25 @@
         <mat-card>
             <mat-toolbar color="pink">Create a Schedule</mat-toolbar>
             <form [formGroup]="createSchedule" (ngSubmit)="onSubmitSchedule()">
+
                 <mat-form-field appearance="outline">
                     <mat-label>Enter the name of the schedule</mat-label>
-                    <input matInput type="text" formControlName="scheduleName" name="scheduleName" id="scheduleName">
+                    <input matInput type="text" formControlName="scheduleName" name="scheduleName" id="scheduleName" required>
+                    <mat-error *ngIf="hasError('scheduleName', 'required')">You must enter a name for the schedule</mat-error>
                 </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                    <mat-label>Description(Optional)</mat-label>
+                    <input matInput type="text" formControlName="description" name="description" id="description">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Visibility(Optional)</mat-label>
+                    <input matInput placeHolder="Either type in 'public' or 'private'"type="text" formControlName="visibility" name="visibility" id="visibility">
+                </mat-form-field>
+
+                <input type='hidden' formControlName="userID" name="userID" id="userID">
+
                 <button mat-raised-button color="lightblue" type="submit">Submit</button>
             </form>
         </mat-card>
@@ -49,6 +64,9 @@
                     <mat-label>Enter the name of the schedule</mat-label>
                     <input matInput type="text" formControlName="deleteSchedule" name="deleteSchedule" id="deleteSchedule">
                 </mat-form-field>
+
+                <input type='hidden' formControlName="userID" name="userID" id="userID">
+                
                 <button mat-raised-button color="lightblue" type="submit">Submit</button>
             </form>
         </mat-card>

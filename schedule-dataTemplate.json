@@ -1,4 +1,8 @@
 {
     "schedule": "template",
-    "listOfSchedule": []
+    "listOfSchedule": [],
+    "owner": "",
+    "description": "",
+    "status": "private",
+    "lastModDate": ""
 }

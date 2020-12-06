@@ -18,6 +18,13 @@ module.exports = function(passport) {
                     //Match password
                     if(user.password == password)
                     {
+                        //Check to see if the account is deactivated
+                        if(user.status == 'deactivate')
+                        {
+                            return done(null, false, {message: 'The account has been de-activated. Please contact the administrator at the following email: bdmichaud637@gmail.com' });
+                        }
+
+
                         return done(null, user);
                     }
                     else
