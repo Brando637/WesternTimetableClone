@@ -1,7 +1,16 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'se3316testlab5@gmail.com',
+        pass: 'test123lab5'
+    }
+});
 //Load User Model
 const User = require('../models/User');
 
@@ -41,12 +50,37 @@ passport.use(
                     {
                         try {
                             let fName = req.body.fName;
-                            User.create({ fName, email, password })
+                            let emailToken = crypto.randomBytes(64).toString('hex');
+                            console.log("The token is the following" + emailToken);
+                            User.create({ fName, email, password, emailToken })
                             .then(user => {
+                                const msg = {
+                                    from: 'se3316testlab5@gmail.com',
+                                    to: email,
+                                    subject: 'DraftMySchedule - Verify Your Email',
+                                    text: `
+                                        Hello, please complete registration by clicking the link below.
+                                        http://${req.headers.host}/verify-email?token=${emailToken}`,
+
+                                    html: `
+                                        <h1>Hello</h1>
+                                        <p>Please complete registration by clicking the link below.</p>
+                                        <a href="http://${req.headers.host}/verify-email?token=${emailToken}>Verify Account</a>`
+                                }
+                                transporter.sendMail(msg, function(err, data) {
+                                    if(err)
+                                    {
+                                        console.log(err);
+                                    }
+                                    else
+                                    {
+                                        console.log('Email sent successfully');
+                                    }
+                                });
                                 return done(null, user);
                             })     
                         }
-                        catch 
+                        catch (error)
                         {
                             done(error);
                         }

@@ -22,5 +22,5 @@ export const appRoutes: Routes = [
     {path: '', redirectTo:'/login', pathMatch: 'full'},
     { path: 'acc-use-poli', component: AccUsePoliComponent },
     { path: 'dcma-not-tak-poli', component: DmcaNotTakPoliComponent },
-    { path: 'sec-and-priv', component: SecAndPrivComponent }
+    { path: 'sec-and-priv', component: SecAndPrivComponent },
 ];

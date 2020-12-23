@@ -7,6 +7,9 @@ var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 
+//User Model
+const User = require('./models/User');
+
 //Login Components
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -18,9 +21,6 @@ const routes = require('./routes/routes');
 
 //DB Config
 const db = require('./config/keys').MongoURI;
-
-//User Model
-const User = require('./models/User');
 
 //Connect to Mongo
 mongoose.connect(db, { useNewUrlParser: true })
@@ -108,52 +108,34 @@ const authReg = () => {
 app.post('/api/user/signup', authReg(), (req, res) => {
     if(auth)
     {
-        res.json({ success: true, msg: 'Signup successful', user: req.user});
+        res.json({ success: true, msg: 'Signup successful. Please check your email for verification', user: req.user});
     }
 });
 
-// app.post('/api/user/register', (req,res) => {
-//     let resArray = [];
-//     const  { fName, email, password, password2 } = req.body;
-//     //Check if passwords match
-//     if(password !== password2)
-//     {
-//         resArray.push({success: false, msg: 'Passwords do not match'});
-//     }
-
-
-//     if(resArray.length > 0)
-//     {
-//         res.status(200).send(resArray);
-//     }
-//     else
-//     {
-//         User.findOne({ email: email})
-//             .then(user => {
-//                 if(user)
-//                 {
-//                     resArray.push({success: false, msg: 'The user already exists'})
-//                     res.status(200).send(resArray);
-//                 }
-//                 else
-//                 {
-//                     const newUser = new User({
-//                         fName,
-//                         email,
-//                         password
-//                     });
-
-//                     console.log(newUser);
-//                     resArray.push({success: true, msg:'The user has been registered. Please login now.'})
-//                     newUser.save()
-//                         .then(user => {
-//                             res.status(200).send(resArray);
-//                         })
-//                         .catch(err => console.log(err));
-//                 }
-//             });
-//     }
-// })
+app.get('/verify-email', (req, res) => {
+    User.findOne({ emailToken: req.query.token })
+    .then(user => {
+        if(!user)
+        {
+            res.send("<h1>Sorry, Token is invalid.<h1>")
+        }
+        else
+        {
+            try
+            {
+                user.emailToken = null;
+                user.confirmed = true;
+                user.save();
+                res.status(200).send("<h1>Verification successful</h1>");
+            }
+            catch (error)
+            {
+                console.log(error);
+            }
+            
+        }
+    })
+});
 
 app.post('/api/resultList', (req,res) => {
 
