@@ -38,14 +38,14 @@ export class RegisterComponent implements OnInit {
     {
       this.authService.register(this.registerForm.value).subscribe(
         (response) => {
-          if(response[0].success == true)
+          if(response.success == true)
           {
-            this.htmlToAdd = '<h2>'+response[0].msg+'</h2>';
+            this.htmlToAdd = '<h2>'+response.msg+'</h2>';
           }
 
-          if(response[0].success == false)
+          if(response.success == false)
           {
-            this.htmlToAdd = '<h2>'+response[0].msg+'</h2>';
+            this.htmlToAdd = '<h2>'+response.msg+'</h2>';
           }
         },
         (error) => {

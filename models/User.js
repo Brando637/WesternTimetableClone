@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
     fName: {
@@ -7,7 +8,8 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
@@ -30,6 +32,29 @@ const UserSchema = new mongoose.Schema({
         default: false
     }
 });
+
+
+//This function will be called before putting it into the database
+//This function is meant to hash the password by using bcrypt to encrypt the password
+UserSchema.pre(
+    'save',
+    async function(next) {
+        const user = this; // Refers to the document that is about to be stored into the database
+        const hash = await bcrypt.hash(this.password, 10);//Takes the original text password and hashes it out to create an ecrypted form of the text
+
+        this.password = hash;
+        next();// Move onto the next middleware in the sequence
+    }
+);
+
+//This function is intended to compare the entered password when a user logs in and compare it to the stored one to see if they match
+//If they don't match then the user will not be allowed into the website
+UserSchema.methods.isValidPassword = async function(password) {
+    const user = this;
+    const compare = await bcrypt.compare(password, user.password);
+
+    return compare;
+}
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User;

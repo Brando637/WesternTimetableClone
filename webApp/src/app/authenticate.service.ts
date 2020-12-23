@@ -26,6 +26,6 @@ export class AuthenticateService {
     return this.http.post(this.rootURL + '/user/login',data)
   }
   register(theForm):Observable<any>{
-    return this.http.post(this.rootURL + '/user/register', theForm)
+    return this.http.post(this.rootURL + '/user/signup', theForm)
   }
 }

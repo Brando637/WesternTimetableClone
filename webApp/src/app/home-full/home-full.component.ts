@@ -65,6 +65,10 @@ export class HomeFullComponent implements OnInit {
     })
   }
 
+  confirmDialog(): void{
+    
+  }
+
   expand(): void {
     this.limited = false;
     this.full = true;

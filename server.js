@@ -6,11 +6,15 @@ const expressSanitizer = require('express-sanitizer');
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
+
+//Login Components
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 //Passport Config
-require('./config/passport')(passport);
+require('./config/passport');
+
+const routes = require('./routes/routes');
 
 //DB Config
 const db = require('./config/keys').MongoURI;
@@ -28,27 +32,30 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));//We make a place for the server to start listening on a port
 
 //Homepage 
-app.get('/', (req, res) => {
-    res.sendFile(process.cwd()+"/indexApp/dist/indexApp/index.html");
-});
+// app.get('/', (req, res) => {
+//     res.sendFile(process.cwd()+"/indexApp/dist/indexApp/index.html");
+// });
 
 
 //We need to add the JSON file that we will parse through
 const timeTable = require('./Lab3-timetable-data.json');
 
 //Express Session
-app.use(session({ secret: 'secret', resave: true, saveUninitialized: true}))
+//app.use(session({ secret: 'secret', resave: true, saveUninitialized: true}))
 
 //Take the body from the form and parse it out so we can use the form information 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressSanitizer());
 
-const auth = () => {
+var auth = false;
+
+const authReg = () => {
     return (req, res, next) => {
-        passport.authenticate('local', (error, user, info) => {
+        passport.authenticate('signup', { session: false }, (error, user, info) => {
             if(user == false && info.message == "That email is not registered in the database")
             {
+                auth = false;
                 res.status(200).send(JSON.stringify({"success": false, msg: info.message }));
             }
             if(user == false && info.message == "Password Incorrect")
@@ -59,75 +66,94 @@ const auth = () => {
             {
                 res.status(200).send(JSON.stringify({ success: false, msg: info.message }));
             }
-            req.login(user, function(error) {
-                if (error) return next(error);
-                next();
-            });
+            if(user == false && info.message == "The user already exists")
+            {
+                res.status(200).send(JSON.stringify({ success: false, msg: info.message }));
+            }
+            if(user == false && info.message == "Passwords do not match")
+            {
+                res.status(200).send(JSON.stringify({ success: false, msg: info.message }));
+            }
+            if (error) return next(error);
+            
+            if(user !== false)
+            {
+                auth = true;
+            }
+            next();
         })(req, res, next)
     }
 }
 
 //Passport Middleware
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-const isLoggedIn = (req, res, next)  => {
-    if(req.isAuthenticated())
+// const isLoggedIn = (req, res, next)  => {
+//     if(req.isAuthenticated())
+//     {
+//         return next()
+//     }
+//     return res.status(400).json({"statusCode": 400, "message": " not authenticated"})
+// }
+
+
+
+// app.post('/api/user/login', auth(), (req,res) => {
+//     let email = req.body.email;
+//     res.status(200).json({'success': true, userID: email});
+// });
+
+//If auth() comes back as true then the next function will be called and state that the user was authenticated
+app.post('/api/user/signup', authReg(), (req, res) => {
+    if(auth)
     {
-        return next()
+        res.json({ success: true, msg: 'Signup successful', user: req.user});
     }
-    return res.status(400).json({"statusCode": 400, "message": " not authenticated"})
-}
-
-
-
-app.post('/api/user/login', auth(), (req,res) => {
-    let email = req.body.email;
-    res.status(200).json({'success': true, userID: email});
 });
 
-app.post('/api/user/register', (req,res) => {
-    let resArray = [];
-    const  { fName, email, password, password2 } = req.body;
-    //Check if passwords match
-    if(password !== password2)
-    {
-        resArray.push({success: false, msg: 'Passwords do not match'});
-    }
+// app.post('/api/user/register', (req,res) => {
+//     let resArray = [];
+//     const  { fName, email, password, password2 } = req.body;
+//     //Check if passwords match
+//     if(password !== password2)
+//     {
+//         resArray.push({success: false, msg: 'Passwords do not match'});
+//     }
 
 
-    if(resArray.length > 0)
-    {
-        res.status(200).send(resArray);
-    }
-    else
-    {
-        User.findOne({ email: email})
-            .then(user => {
-                if(user)
-                {
-                    resArray.push({success: false, msg: 'The user already exists'})
-                    res.status(200).send(resArray);
-                }
-                else
-                {
-                    const newUser = new User({
-                        fName,
-                        email,
-                        password
-                    });
+//     if(resArray.length > 0)
+//     {
+//         res.status(200).send(resArray);
+//     }
+//     else
+//     {
+//         User.findOne({ email: email})
+//             .then(user => {
+//                 if(user)
+//                 {
+//                     resArray.push({success: false, msg: 'The user already exists'})
+//                     res.status(200).send(resArray);
+//                 }
+//                 else
+//                 {
+//                     const newUser = new User({
+//                         fName,
+//                         email,
+//                         password
+//                     });
 
-                    console.log(newUser);
-                    resArray.push({success: true, msg:'The user has been registered. Please login now.'})
-                    newUser.save()
-                        .then(user => {
-                            res.status(200).send(resArray);
-                        })
-                        .catch(err => console.log(err));
-                }
-            });
-    }
-})
+//                     console.log(newUser);
+//                     resArray.push({success: true, msg:'The user has been registered. Please login now.'})
+//                     newUser.save()
+//                         .then(user => {
+//                             res.status(200).send(resArray);
+//                         })
+//                         .catch(err => console.log(err));
+//                 }
+//             });
+//     }
+// })
 
 app.post('/api/resultList', (req,res) => {
 
