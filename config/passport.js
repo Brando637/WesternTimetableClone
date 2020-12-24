@@ -14,7 +14,7 @@ let transporter = nodemailer.createTransport({
 //Load User Model
 const User = require('../models/User');
 
-//
+//To extract the JWT from the query parameter
 const JWTstrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
@@ -104,6 +104,7 @@ passport.use(
             try{
                 const user = await User.findOne({ email });
 
+                //Check to see if the entered email is in the database
                 if(!user)
                 {
                     return done(null, false, { message: 'User not found'});
@@ -111,9 +112,15 @@ passport.use(
 
                 const validate = await user.isValidPassword(password);
 
+                //Check to see if the password entered is incorrect
                 if(!validate)
                 {
                     return done(null, false, { message: 'Wrong Password' });
+                }
+                
+                //Check to see if the account is deactivated
+                if (user.status == 'deactivate') {
+                    return done(null, false, { message: 'The account has been de-activated. Please contact the administrator at the following email: se3316testlab5@gmail.com' });
                 }
 
                 return done (null, user, {message: 'Logged in Successfully' });
@@ -127,16 +134,22 @@ passport.use(
     )  
 );
 
+//To extract the JWT from the query parameter
 passport.use(
     new JWTstrategy(
         {
             secretOrKey: 'TOP_SECRET',
-            jwtFromRequest: ExtractJWT.fromUrlQueryParameter('secret_token')
+            jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
         },
         async (token, done) => {
             try 
             {
-                return done(null, token.user);
+                const expirationDate = new Date (token.exp * 1000);
+                if(expirationDate < new Date())
+                {
+                    return done(null, false);
+                }
+                return done(null, token);
             }
             catch (error){done(error);}
         }
@@ -157,11 +170,7 @@ passport.use(
 //                     //Match password
 //                     if(user.password == password)
 //                     {
-//                         //Check to see if the account is deactivated
-//                         if(user.status == 'deactivate')
-//                         {
-//                             return done(null, false, {message: 'The account has been de-activated. Please contact the administrator at the following email: bdmichaud637@gmail.com' });
-//                         }
+//                         
 
 
 //                         return done(null, user);

@@ -39,13 +39,14 @@ const UserSchema = new mongoose.Schema({
 
 //This function will be called before putting it into the database
 //This function is meant to hash the password by using bcrypt to encrypt the password
-UserSchema.pre(
-    'save',
-    async function(next) {
+UserSchema.pre('save', function(next) {
         const user = this; // Refers to the document that is about to be stored into the database
-        const hash = await bcrypt.hash(this.password, 10);//Takes the original text password and hashes it out to create an ecrypted form of the text
-
-        this.password = hash;
+        if( this.password && this.isModified('password') )
+        {
+            const hash = bcrypt.hashSync(this.password, 10);//Takes the original text password and hashes it out to create an ecrypted form of the text
+            this.password = hash;
+        }
+        
         next();// Move onto the next middleware in the sequence
     }
 );
@@ -55,7 +56,6 @@ UserSchema.pre(
 UserSchema.methods.isValidPassword = async function(password) {
     const user = this;
     const compare = await bcrypt.compare(password, user.password);
-
     return compare;
 }
 

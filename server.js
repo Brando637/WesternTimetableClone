@@ -13,11 +13,12 @@ const User = require('./models/User');
 //Login Components
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const jwt = require('jsonwebtoken');
+const randToken = require('rand-token');
+const refreshTokens = {};
 
 //Passport Config
 require('./config/passport');
-
-const routes = require('./routes/routes');
 
 //DB Config
 const db = require('./config/keys').MongoURI;
@@ -98,12 +99,65 @@ const authReg = () => {
 // }
 
 
+app.post('/api/user/login', async(req, res, next) => {
+    passport.authenticate('login', async (err, user, info) => {
+        try
+        {
+            if( user == false && info.message == "Wrong Password" )
+            {
+                return res.status(200).send(JSON.stringify({ success: false, msg: info.message }));
+            }
+            if( user == false && info.message == "User not found" )
+            {
+                return res.status(200).send(JSON.stringify({ success: false, msg: info.message }));
+            }
+            if( user == false && info.message == "The account has been de-activated. Please contact the administrator at the following email: se3316testlab5@gmail.com")
+            {
+                return res.status(200).send(JSON.stringify({ success: false, msg: info.message }));
+            }
+            if(err || !user)
+            {
+                const error = new Error('An error occurred.');
+                return next(error);
+            }
+            req.login( user, { session: false }, async(error) => {
+                if(error) return next(error);
 
-// app.post('/api/user/login', auth(), (req,res) => {
-//     let email = req.body.email;
-//     res.status(200).json({'success': true, userID: email});
-// });
+                const body = { _id: user._id, email: user.email };
+                const token = jwt.sign({ user: body }, 'TOP_SECRET', { expiresIn: 600 });
+                const refreshToken = randToken.uid(256);
+                refreshTokens[refreshToken] = user.email;
+                return res.json({ jwt: token, refreshToken: refreshToken });
+            });
+        }
+        catch (error)
+        {
+            return next(error);
+        }
+    })(req, res, next);
+});
 
+app.post('/api/user/logout', function(req, res) {
+    const refreshToken = req.body.refreshToken;
+    if( refreshToken in refreshTokens )
+    { delete refreshTokens[refreshToken]; }
+    res.sendStatus(204);
+});
+
+app.post('/api/user/refresh', function(req, res) {
+    const refreshToken = req.body.refreshToken;
+
+    if(refreshToken in refreshTokens)
+    {
+        const body = { email: refreshTokens[refreshToken] };
+        const token = jwt.sign({ user: body }, 'TOP_SECRET', { expiresIn: 600 });
+        res.json({ jwt: token });
+    }
+    else
+    {
+        res.sendStatus(401);
+    }
+});
 //If auth() comes back as true then the next function will be called and state that the user was authenticated
 app.post('/api/user/signup', authReg(), (req, res) => {
     if(auth)

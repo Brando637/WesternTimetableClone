@@ -8,6 +8,7 @@ import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { UserComponent } from './user/user.component';
 import { AuthGuardService as AuthGuard } from './auth-guard.service';
+import { AdministratorComponent } from './user/administrator/administrator.component';
 export const appRoutes: Routes = [
     { path: 'home-full', component: HomeFullComponent, canActivate:[AuthGuard] },
     { path: 'home-limited', component: HomeLimitedComponent},
@@ -18,6 +19,10 @@ export const appRoutes: Routes = [
     {
         path: 'register', component:UserComponent,
         children: [{path: '', component: RegisterComponent }]
+    },
+    {
+        path: 'administrator', component:UserComponent,
+        children: [{path: '', component: AdministratorComponent}]
     },
     {path: '', redirectTo:'/login', pathMatch: 'full'},
     { path: 'acc-use-poli', component: AccUsePoliComponent },
