@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpCallsService } from '../http-calls.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-limited',
@@ -35,7 +36,7 @@ export class HomeLimitedComponent implements OnInit {
   }
 
 
-  constructor(private fb: FormBuilder, private appService: HttpCallsService, private sanitizer: DomSanitizer) {}
+  constructor(private fb: FormBuilder, private appService: HttpCallsService, private sanitizer: DomSanitizer, private route: Router) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -50,6 +51,9 @@ export class HomeLimitedComponent implements OnInit {
     this.searchCourseFormKey = this.fb.group({
       keyword: new FormControl( '', [Validators.minLength(4)] )
     });
+  }
+  register(): void{
+    this.route.navigate(['/register']);
   }
 
   expand(): void {
