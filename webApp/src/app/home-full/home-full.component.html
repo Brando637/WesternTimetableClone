@@ -3,6 +3,9 @@
         <mat-toolbar color="lightblue">Draft My Schedule</mat-toolbar>
 
         <mat-card>
+            <button mat-raised-button color="primary" (click)="logout()">Logout</button>
+        </mat-card>
+        <mat-card>
             <mat-toolbar color="pink">Search</mat-toolbar>
             <form fxLayout="column" [formGroup]="searchCourseForm" (ngSubmit)="onSubmitCourse()">
                 <mat-form-field appearance="outline">

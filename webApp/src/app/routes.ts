@@ -10,7 +10,7 @@ import { UserComponent } from './user/user.component';
 import { AuthGuardService as AuthGuard } from './auth-guard.service';
 import { AdministratorComponent } from './user/administrator/administrator.component';
 export const appRoutes: Routes = [
-    { path: 'home-full', component: HomeFullComponent, canActivate:[AuthGuard] },
+    { path: 'home-full', component: HomeFullComponent/*, canActivate:[AuthGuard]*/ },
     { path: 'home-limited', component: HomeLimitedComponent},
     {
         path: 'login', component:UserComponent,

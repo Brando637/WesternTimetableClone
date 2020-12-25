@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpCallsService } from '../http-calls.service';
+import { AuthenticateService } from '../authenticate.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-full',
@@ -36,13 +38,24 @@ export class HomeFullComponent implements OnInit {
     }
   }
 
-  constructor(private fb: FormBuilder, private appService: HttpCallsService, private sanitizer: DomSanitizer) {}
+  constructor(private fb: FormBuilder, private appService: HttpCallsService, private sanitizer: DomSanitizer, private authService: AuthenticateService, private route: Router) {}
 
   public hasError = (controlName: string, errorName: string) => {
     return this.createSchedule.controls[controlName].hasError(errorName);
   }
   ngOnInit(): void {
     this.initializeForm();
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe(
+      success => {
+        if(success)
+        {
+          this.route.navigate(['/login']);
+        }
+      }
+    )
   }
 
   initializeForm(): void {

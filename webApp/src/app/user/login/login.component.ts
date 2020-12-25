@@ -36,10 +36,9 @@ export class LoginComponent implements OnInit {
     {
       this.authService.login(this.loginForm.value).subscribe(
         (response) => {
-          if(response.success)
+          console.log(response);
+          if(response.success == true)
           {
-            console.log(response.userID)
-            this.authService.setUserInfo({'user': response.userID});
             this.router.navigate(['home-full']);
           }
           else

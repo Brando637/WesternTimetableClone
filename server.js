@@ -127,7 +127,7 @@ app.post('/api/user/login', async(req, res, next) => {
                 const token = jwt.sign({ user: body }, 'TOP_SECRET', { expiresIn: 600 });
                 const refreshToken = randToken.uid(256);
                 refreshTokens[refreshToken] = user.email;
-                return res.json({ jwt: token, refreshToken: refreshToken });
+                return res.json({ success: true, jwt: token, refreshToken: refreshToken });
             });
         }
         catch (error)
@@ -217,9 +217,10 @@ app.post('/api/resultList', (req,res) => {
 
 
 //Will return all subject codes along with their appropriate classname  and descriptions
-app.post('/api/subjects', (req,res) => {
+app.post('/api/subjects', passport.authenticate('jwt', { session: false }), (req,res) => {
     let listSubject = [];
     let testListSubject = [];
+    console.log(req.user.user.email);
 
     for (let i = 0; i < timeTable.length; i++)
     {
