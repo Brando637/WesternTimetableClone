@@ -5,7 +5,6 @@ const path = require('path');
 const expressSanitizer = require('express-sanitizer');
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const session = require('express-session');
 
 //User Model
 const User = require('./models/User');
@@ -28,6 +27,19 @@ mongoose.connect(db, { useNewUrlParser: true })
     .then(() => console.log('MongoDB Connected...'))
     .catch(err => console.log(err));
 
+
+//Email
+const nodemailer = require('nodemailer');
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'se3316testlab5@gmail.com',
+        pass: 'test123lab5'
+    }
+});
+
+
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));//We make a place for the server to start listening on a port
@@ -40,9 +52,6 @@ app.listen(PORT, () => console.log(`Listening on port ${PORT}`));//We make a pla
 
 //We need to add the JSON file that we will parse through
 const timeTable = require('./Lab3-timetable-data.json');
-
-//Express Session
-//app.use(session({ secret: 'secret', resave: true, saveUninitialized: true}))
 
 //Take the body from the form and parse it out so we can use the form information 
 app.use(bodyParser.json());
@@ -115,6 +124,11 @@ app.post('/api/user/login', async(req, res, next) => {
             {
                 return res.status(200).send(JSON.stringify({ success: false, msg: info.message }));
             }
+
+            if( user == false && info.message == "You have not confirmed your email yet. Would you like to re-send your confirmation email?")
+            {
+                return res.status(200).send(JSON.stringify({ success: false, msg: info.message }));
+            }
             if(err || !user)
             {
                 const error = new Error('An error occurred.');
@@ -164,6 +178,46 @@ app.post('/api/user/signup', authReg(), (req, res) => {
     {
         res.json({ success: true, msg: 'Signup successful. Please check your email for verification', user: req.user});
     }
+});
+
+app.post('/api/user/resendEmail', (req, res) => {
+    console.log(req.body.email);
+    const email = req.body.email;
+    User.findOne({ email: email })
+    .then(user => {
+        try
+        {
+            console.log("We found someone but there is a problem with the email")
+            const emailMsg = {
+                from: 'se3316testlab5@gmail.com',
+                to: email,
+                subject: 'DraftMySchedule - Verify Your Email',
+                text: `
+                    Hello, please complete registration by clicking the link below.
+                    http://${req.headers.host}/verify-email?token=${user.emailToken}`,
+    
+                html: `
+                    <h1>Hello</h1>
+                    <p>Please complete registration by clicking the link below.</p>
+                    <a href="http://${req.headers.host}/verify-email?token=${user.emailToken}>Verify Account</a>`
+            }
+            transporter.sendMail(emailMsg, function (err, data) {
+                if (err) 
+                {
+                    console.log(err);
+                }
+                else 
+                {
+                    console.log('Email sent successfully');
+                    res.status(200).send(JSON.stringify({ success: true, msg: 'Email resent. Please check your email for verification.'}));
+                }
+            })
+        }
+        catch( error )
+        {
+            console.log(error);
+        }
+    });
 });
 
 app.get('/verify-email', (req, res) => {

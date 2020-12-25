@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -35,10 +36,14 @@ export class HttpCallsService {
   }
 
   deleteSchedule(scheduleName: string){
-    return this.http.delete(this.rootURL + '/schedule/' + scheduleName)
+    return this.http.delete(this.rootURL + '/schedule/' + scheduleName);
   }
 
   deleteSchedules(){
-    return this.http.delete(this.rootURL + '/schedules')
+    return this.http.delete(this.rootURL + '/schedules');
+  }
+
+  resendEmail(theForm: any): Observable<any>{
+    return this.http.post(this.rootURL + '/user/resendEmail', theForm);
   }
 }

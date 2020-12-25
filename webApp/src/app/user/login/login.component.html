@@ -18,6 +18,9 @@
         <div class="outputNotif" id="outputNotif">
             <div [innerHtml]="htmlToAdd"></div>
         </div>
+        <ng-container *ngIf="show">
+            <button mat-raised-button color="primary" (click)="resendEmail()"> Resend Email</button>
+        </ng-container>
     </mat-card>
     
 </div>

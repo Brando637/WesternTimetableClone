@@ -123,6 +123,12 @@ passport.use(
                     return done(null, false, { message: 'The account has been de-activated. Please contact the administrator at the following email: se3316testlab5@gmail.com' });
                 }
 
+                //Check to see if the user has confirmed their email
+                if ( user.confirmed == false)
+                {
+                    return done(null, false, { message: 'You have not confirmed your email yet. Would you like to re-send your confirmation email?'})
+                }
+
                 return done (null, user, {message: 'Logged in Successfully' });
             }
 

@@ -17,17 +17,6 @@ export class AuthenticateService {
 
   rootURL = '/api'
 
-  // public isLoggedIn(): Boolean {
-  //   let userData = localStorage.getItem('userInfo')
-  //   if(userData && JSON.parse(userData))
-  //   {return true;}
-  //   else{return false;}
-  // }
-  // public setUserInfo(user){
-  //   localStorage.setItem('userInfo', JSON.stringify(user));
-  // }
-
-
   login(data):Observable<any>{
     return this.http.post<any>(this.rootURL + '/user/login',data)
     .pipe(
