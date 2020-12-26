@@ -28,7 +28,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Enter keyword</mat-label>
                     <input matInput type="text" formControlName="keyword" name="keyword" id="keyword">
-                    <mat-error *ngIf="searchCourseFormKey.hasError('minlength')">The value is lower than the minimum</mat-error>
+                    <mat-error *ngIf="hasErrorKey('keyword', 'minlength')">The value is lower than the minimum</mat-error>
                 </mat-form-field>
                 <button mat-raised-button color="lightblue" type="submit">Submit</button>
             </form>

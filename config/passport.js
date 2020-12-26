@@ -109,9 +109,9 @@ passport.use(
         },
         async (email, password, done) => {
             try{
-                let emailSan = req.sanitize(email);
-                let passwordSan = req.sanitize(password)
-                const user = await User.findOne({ email: emailSan });
+                //let emailSan = req.sanitize(email);
+                //let passwordSan = req.sanitize(password)
+                const user = await User.findOne({ email: email });
 
                 //Check to see if the entered email is in the database
                 if(!user)
@@ -119,7 +119,7 @@ passport.use(
                     return done(null, false, { message: 'User not found'});
                 }
 
-                const validate = await user.isValidPassword(passwordSan);
+                const validate = await user.isValidPassword(password);
 
                 //Check to see if the password entered is incorrect
                 if(!validate)

@@ -52,6 +52,20 @@ app.listen(PORT, () => console.log(`Listening on port ${PORT}`));//We make a pla
 
 //We need to add the JSON file that we will parse through
 const timeTable = require('./Lab3-timetable-data.json');
+timeTable.map(i => i.Review = {"user":"","time":""});
+
+//SoftMatch keywords
+const fuzzySet = require('fuzzyset');
+keywordDictionary = fuzzySet([],true, 3, 4);
+
+
+//Create the set of words that will be used to soft match to the keyword later
+for(let i = 0; i < timeTable.length; i++)
+{
+    let obj = timeTable[i];
+    keywordDictionary.add(obj.catalog_nbr.toString());
+    keywordDictionary.add(obj.className.toString());
+}
 
 //Take the body from the form and parse it out so we can use the form information 
 app.use(bodyParser.json());
@@ -94,19 +108,6 @@ const authReg = () => {
         })(req, res, next)
     }
 }
-
-//Passport Middleware
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// const isLoggedIn = (req, res, next)  => {
-//     if(req.isAuthenticated())
-//     {
-//         return next()
-//     }
-//     return res.status(400).json({"statusCode": 400, "message": " not authenticated"})
-// }
-
 
 app.post('/api/user/login', async(req, res, next) => {
     passport.authenticate('login', async (err, user, info) => {
@@ -387,48 +388,67 @@ app.post('/api/subjects/courses', (req,res) => {
 
 app.post('/api/keyword', (req,res) => {
     let listSubject =[];
+    let keywordSan = req.sanitize(req.body.keyword);
+    //console.log(keywordDictionary.get(keywordSan, 1, 0.2));
 
-    for(let i = 0; i < timeTable.length; i++)
+    //SoftMatch the entered keyword with the entire dictionary and find what matches the best with what the user entered
+    let result = keywordDictionary.get(keywordSan, 1, 0.2)
+
+    //We now need to iterate through each of the results and add them into a table to send to the user for them to be able to view
+    for(let i = 0; i < result.length; i++)
     {
-        let obj = timeTable[i];
-        if(obj.catalog_nbr.toString().includes(req.sanitize(req.body.keyword.toUpperCase())))
+        console.log(result[i][1]);
+        
+        //For each of index of the result we need to see if it matches the catalog_nbr or the className and then add it to the array we will send to the user
+        for(let j = 0; j < timeTable.length; j++)
         {
-            listSubject.push(obj);
-        }
-        if(obj.className.toString().includes(req.sanitize(req.body.keyword.toUpperCase())))
-        {
-            if(listSubject.some(course => course.className == obj.className))
-            {
-                continue;
-            }
-            else
-            {
-                listSubject.push(obj);
-            }
-        }
-        if(req.sanitize(req.body.keyword.toUpperCase()).includes(obj.catalog_nbr.toString()))
-        {
-            if(listSubject.some(course => course.catalog_nbr == obj.catalog_nbr))
-            {
-                continue;
-            }
-            else
-            {
-                listSubject.push(obj);
-            } 
-        }
-        if(req.sanitize(req.body.keyword.toUpperCase()).includes(obj.className.toString()))
-        {
-            if(listSubject.some(course => course.className == obj.className))
-            {
-                continue;
-            }
-            else
-            {
-                listSubject.push(obj);
-            } 
+            let obj = timeTable[j];
+            if( ( obj.catalog_nbr == result[i][1] ) || ( obj.className == result[i][1] ) )
+            {listSubject.push(obj);}
         }
     }
+
+    // for(let i = 0; i < timeTable.length; i++)
+    // {
+    //     let obj = timeTable[i];
+    //     if(obj.catalog_nbr.toString().includes(req.sanitize(req.body.keyword.toUpperCase())))
+    //     {
+    //         listSubject.push(obj);
+    //     }
+    //     if(obj.className.toString().includes(req.sanitize(req.body.keyword.toUpperCase())))
+    //     {
+    //         if(listSubject.some(course => course.className == obj.className))
+    //         {
+    //             continue;
+    //         }
+    //         else
+    //         {
+    //             listSubject.push(obj);
+    //         }
+    //     }
+    //     if(req.sanitize(req.body.keyword.toUpperCase()).includes(obj.catalog_nbr.toString()))
+    //     {
+    //         if(listSubject.some(course => course.catalog_nbr == obj.catalog_nbr))
+    //         {
+    //             continue;
+    //         }
+    //         else
+    //         {
+    //             listSubject.push(obj);
+    //         } 
+    //     }
+    //     if(req.sanitize(req.body.keyword.toUpperCase()).includes(obj.className.toString()))
+    //     {
+    //         if(listSubject.some(course => course.className == obj.className))
+    //         {
+    //             continue;
+    //         }
+    //         else
+    //         {
+    //             listSubject.push(obj);
+    //         } 
+    //     }
+    // }
     res.status(200).send(listSubject);
 });
 

@@ -38,6 +38,9 @@ export class HomeLimitedComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private appService: HttpCallsService, private sanitizer: DomSanitizer, private route: Router) {}
 
+  public hasError = (controlName: string, errorName: string) => {
+    return this.searchCourseFormKey.controls[controlName].hasError(errorName);
+  }
   ngOnInit(): void {
     this.initializeForm();
     this.onPublicSchedules();
@@ -82,16 +85,19 @@ export class HomeLimitedComponent implements OnInit {
 
 
   onSubmitKey(): void{
-    this.appService.searchCourseKeyword(this.searchCourseFormKey.value).subscribe(
-      (response) =>{
-        var attachHTML = "";
-        attachHTML = this.parseResultLimited(response);
-        this.htmlToAdd = this.sanitizer.bypassSecurityTrustHtml("<ul class=scheduleList>" + attachHTML + '</ul>');
-        attachHTML = this.parseResultFull(response);
-        this.htmlToAddFull = this.sanitizer.bypassSecurityTrustHtml("<ul class=scheduleList>" + attachHTML + '</ul>');
-      },
-      (error) => {console.log("The error return from the server is" + error)}
-    );
+    if(this.searchCourseFormKey.valid)
+    {
+      this.appService.searchCourseKeyword(this.searchCourseFormKey.value).subscribe(
+        (response) =>{
+          var attachHTML = "";
+          attachHTML = this.parseResultLimited(response);
+          this.htmlToAdd = this.sanitizer.bypassSecurityTrustHtml("<ul class=scheduleList>" + attachHTML + '</ul>');
+          attachHTML = this.parseResultFull(response);
+          this.htmlToAddFull = this.sanitizer.bypassSecurityTrustHtml("<ul class=scheduleList>" + attachHTML + '</ul>');
+        },
+        (error) => {console.log("The error return from the server is" + error)}
+      );
+    }
   }
 
   onPublicSchedules(): void{
