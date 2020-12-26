@@ -143,6 +143,15 @@ export class HomeLimitedComponent implements OnInit {
             attachHTML += '<h2>' + response[x].subject + '' + response[x].catalog_nbr + ' - ' + response[x].className +  '</h2>';
             attachHTML += '<div> Course Description: ' + response[x].catalog_description + '<div class=grid-container><div>Section</div><div>Component</div><div>Class Nbr</div><div>Days</div><div>Start Time</div><div>End Time</div><div>Location</div><div>Instructor</div><div>Requisites and Constraints</div><div>Status</div><div>Campus</div><div>Extra Info</div>';
             attachHTML += '<div>'+response[x].course_info[0].class_section+'</div>' + '<div>'+response[x].course_info[0].ssr_component+'</div>' + '<div>'+response[x].course_info[0].class_nbr+'</div>'+'<div>'+response[x].course_info[0].days+'</div>'+'<div>'+response[x].course_info[0].start_time+'</div>'+'<div>'+response[x].course_info[0].end_time+'</div>'+'<div>'+response[x].course_info[0].facility_ID+'</div>'+'<div>'+response[x].course_info[0].instructors+'</div>'+'<div>'+response[x].course_info[0].descrlong+'</div>'+'<div>'+response[x].course_info[0].enrl_stat+'</div>'+'<div>'+response[x].course_info[0].campus+'</div>'+'<div>'+response[x].course_info[0].descr+'</div></div>';
+            attachHTML += '<h3>Reviews</h3>';
+            attachHTML += '<div class=grid-containerReview><div>Name</div><div>Time</div><div>Review</div>';
+
+            for ( let y in response[x].review )
+            {
+              console.log(response[x].review[y]);
+              attachHTML += '<div>' + response[x].review[y].fName + '</div><div>' + response[x].review[y].timeModified + '</div><div>' + response[x].review[y].reviewDescrip + '</div>';
+            }
+            attachHTML += '</div>'
           }
           attachHTML += '</div>';
         }

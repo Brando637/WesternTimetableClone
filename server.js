@@ -52,7 +52,7 @@ app.listen(PORT, () => console.log(`Listening on port ${PORT}`));//We make a pla
 
 //We need to add the JSON file that we will parse through
 const timeTable = require('./Lab3-timetable-data.json');
-timeTable.map(i => i.Review = {"user":"","time":""});
+
 
 //SoftMatch keywords
 const fuzzySet = require('fuzzyset');
@@ -271,7 +271,7 @@ app.post('/api/resultList', (req,res) => {
 
 
 //Will return all subject codes along with their appropriate classname  and descriptions
-app.post('/api/subjects', passport.authenticate('jwt', { session: false }), (req,res) => {
+app.post('/api/subjects', (req,res) => {
     let listSubject = [];
     let testListSubject = [];
     console.log(req.user.user.email);
@@ -407,53 +407,11 @@ app.post('/api/keyword', (req,res) => {
             {listSubject.push(obj);}
         }
     }
-
-    // for(let i = 0; i < timeTable.length; i++)
-    // {
-    //     let obj = timeTable[i];
-    //     if(obj.catalog_nbr.toString().includes(req.sanitize(req.body.keyword.toUpperCase())))
-    //     {
-    //         listSubject.push(obj);
-    //     }
-    //     if(obj.className.toString().includes(req.sanitize(req.body.keyword.toUpperCase())))
-    //     {
-    //         if(listSubject.some(course => course.className == obj.className))
-    //         {
-    //             continue;
-    //         }
-    //         else
-    //         {
-    //             listSubject.push(obj);
-    //         }
-    //     }
-    //     if(req.sanitize(req.body.keyword.toUpperCase()).includes(obj.catalog_nbr.toString()))
-    //     {
-    //         if(listSubject.some(course => course.catalog_nbr == obj.catalog_nbr))
-    //         {
-    //             continue;
-    //         }
-    //         else
-    //         {
-    //             listSubject.push(obj);
-    //         } 
-    //     }
-    //     if(req.sanitize(req.body.keyword.toUpperCase()).includes(obj.className.toString()))
-    //     {
-    //         if(listSubject.some(course => course.className == obj.className))
-    //         {
-    //             continue;
-    //         }
-    //         else
-    //         {
-    //             listSubject.push(obj);
-    //         } 
-    //     }
-    // }
     res.status(200).send(listSubject);
 });
 
 //Create a new schedule
-app.post('/api/schedule/:scheduleName', (req, res) => {
+app.post('/api/schedule/:scheduleName', passport.authenticate('jwt', { session: false }), (req, res) => {
     let base = require('./schedule-dataTemplate.json');
     let data = require('./schedule-data.json');
 
