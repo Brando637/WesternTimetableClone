@@ -1,0 +1,5 @@
+# .gitignore 
+node_modules
+Lab3-timetable-data.json
+schedule-data.json
+schedule-dataTemplate.json
