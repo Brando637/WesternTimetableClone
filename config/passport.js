@@ -18,6 +18,10 @@ const User = require('../models/User');
 const JWTstrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
+const express = require ('express');//Load the express module
+const app = express();//Create an express object, a web application is created
+const expressSanitizer = require('express-sanitizer');
+app.use(expressSanitizer());
 
 //Create a new account and add it to the database
 passport.use(
@@ -31,16 +35,19 @@ passport.use(
         function (req, email, password, done)
         {
             let resArray = [];
-            let password2 = req.body.password2;
+            let emailSan = req.sanitize(email);
+            let passwordSan = req.sanitize(password);
+            let password2San = req.sanitize(req.body.password2);
+
 
             //Check if passwords match
-            if(password !== password2)
+            if(passwordSan !== password2San)
             {
                 return done(null, false, { message: 'Passwords do not match' });
             }
             else
             {
-                User.findOne({ email: email })
+                User.findOne({ email: emailSan })
                 .then(user => {
                     if(user)
                     {
@@ -49,14 +56,14 @@ passport.use(
                     else
                     {
                         try {
-                            let fName = req.body.fName;
+                            let fName = req.sanitize(req.body.fName);
                             let emailToken = crypto.randomBytes(64).toString('hex');
                             console.log("The token is the following" + emailToken);
-                            User.create({ fName, email, password, emailToken })
+                            User.create({ fName, email: emailSan, password: passwordSan, emailToken })
                             .then(user => {
                                 const msg = {
                                     from: 'se3316testlab5@gmail.com',
-                                    to: email,
+                                    to: emailSan,
                                     subject: 'DraftMySchedule - Verify Your Email',
                                     text: `
                                         Hello, please complete registration by clicking the link below.
@@ -102,7 +109,9 @@ passport.use(
         },
         async (email, password, done) => {
             try{
-                const user = await User.findOne({ email });
+                let emailSan = req.sanitize(email);
+                let passwordSan = req.sanitize(password)
+                const user = await User.findOne({ email: emailSan });
 
                 //Check to see if the entered email is in the database
                 if(!user)
@@ -110,7 +119,7 @@ passport.use(
                     return done(null, false, { message: 'User not found'});
                 }
 
-                const validate = await user.isValidPassword(password);
+                const validate = await user.isValidPassword(passwordSan);
 
                 //Check to see if the password entered is incorrect
                 if(!validate)
@@ -161,43 +170,3 @@ passport.use(
         }
     )
 );
-
-// module.exports = function(passport) {
-//     passport.use(
-//         new LocalStrategy({ usernameField: 'email'}, (email, password, done) => {
-//             //Check if user exists in database
-//             User.findOne({ email: email })
-//                 .then(user => {
-//                     if(!user)
-//                     {
-//                         return done(null, false, { message: 'That email is not registered in the database' });
-//                     }
-
-//                     //Match password
-//                     if(user.password == password)
-//                     {
-//                         
-
-
-//                         return done(null, user);
-//                     }
-//                     else
-//                     {
-//                         console.log("the passwords don't match")
-//                         return done(null, false, { message: 'Password Incorrect' })
-//                     }
-//                 })
-//                 .catch(err => console.log(err));
-//         })
-//     );
-
-//     passport.serializeUser(function(user, done) {
-//         if(user) done(null, user.id);
-//       });
-      
-//       passport.deserializeUser(function(id, done) {
-//         User.findById(id, function(err, user) {
-//           done(err, user);
-//         });
-//       });
-// }

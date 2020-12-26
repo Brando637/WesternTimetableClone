@@ -181,8 +181,7 @@ app.post('/api/user/signup', authReg(), (req, res) => {
 });
 
 app.post('/api/user/resendEmail', (req, res) => {
-    console.log(req.body.email);
-    const email = req.body.email;
+    const email = req.sanitize(req.body.email);
     User.findOne({ email: email })
     .then(user => {
         try
