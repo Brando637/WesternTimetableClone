@@ -478,29 +478,29 @@ app.post('/api/schedule/:scheduleName', passport.authenticate('jwt', { session: 
     }
 });
 
-app.delete('/api/schedule/:scheduleName', (req, res) => {
+app.delete('/api/schedule/:scheduleName', passport.authenticate('jwt', { session: false }), (req, res) => {
     let data = require('./schedule-data.json');
     let scheduleName = req.sanitize(req.params.scheduleName)
     for (x in data)
     {
         let test = data.some(z => z.schedule == scheduleName);
+        console.log(test);
         //If there is a schedule that does have the specified name then we will go through the JSON file and find at which index it is at
         if(test)
         {
             if (data[x].schedule == scheduleName)
             {
-                console.log(x);
                 data.splice(x, 1);
                 fs.writeFile('schedule-data.json', JSON.stringify(data, null, "\n"), (err) => {
                     if (err) { console.log(err); }
-                    else { res.status(200).send(JSON.stringify("The schedule was successfully removed"));//res.render('indexSuccess', { successNum: 1 }); 
+                    else { res.status(200).send(JSON.stringify("The schedule was successfully removed"));
                 }
                 })
             }
         }
         else
         {
-            res.status(200).send(JSON.stringify("Sorry, the entered schedule does not exists in the database"))
+            res.status(200).send(JSON.stringify("Sorry, the entered schedule does not exist in the database"))
             //res.render('indexError', {errorNum: 2});
             break;
         }

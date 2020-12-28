@@ -146,6 +146,16 @@ export class HomeFullComponent implements OnInit {
           },
           (error) => console.log("The error returned from the server is" + error)
         );
+
+        this.appService.getSchedulesPrivate().subscribe(
+          (response) => {
+            var attachHTML = "";
+            attachHTML = this.parseResultSchedule(response);
+            this.htmlSchedule = this.sanitizer.bypassSecurityTrustHtml("<ul>" + attachHTML + '</ul>');
+    
+          },
+          (error) => console.log(error)
+        );
       }
     });
 
