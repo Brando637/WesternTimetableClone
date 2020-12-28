@@ -22,6 +22,7 @@ export class HomeFullComponent implements OnInit {
   htmlToAdd:SafeHtml;
   htmlToAddFull:SafeHtml;
   htmlSchedule:SafeHtml;
+  htmlSchedulePub: SafeHtml;
   responseHolder: object;
   enable = new FormControl();
   public limited: boolean = true;
@@ -60,6 +61,8 @@ export class HomeFullComponent implements OnInit {
       },
       (error) => console.log(error)
     );
+    this.onPublicSchedules();
+
   }
 
   logout(): void {
@@ -175,9 +178,14 @@ export class HomeFullComponent implements OnInit {
   onPublicSchedules(): void{
     this.appService.getSchedules().subscribe(
       (response) => {
-
+        console.log(response);
+        var attachHTML = "";
+        attachHTML = this.parseResultSchedulePublic(response);
+        this.htmlSchedulePub = this.sanitizer.bypassSecurityTrustHtml("<ul>" + attachHTML + '</ul>');
       },
-      (error) => {}
+      (error) => {
+        console.log(error);
+      }
     );
   }
 
@@ -188,15 +196,23 @@ export class HomeFullComponent implements OnInit {
 
     for (let x in response )
     {
-      console.log(response[x]);
-      console.log(response[x].schedule + "\n" + response[x].listOfSchedule)
       attachHTML += '<div>' + response[x].schedule + '</div><div>' + response[x].listOfSchedule + '</div><div>' + response[x].description + '</div><div>' + response[x].status + '</div><div>' + response[x].lastModDate + '</div>';
     }
     attachHTML +='</div>';
     return attachHTML;
   }
-  parseResultSchedulePub(response, publicSchedule): string{
-    return "";
+  parseResultSchedulePublic(response): string{
+    var attachHTML = "";
+
+    attachHTML += '<div class=grid-containerSchedulePub><div>Schedule</div><div>Username</div><div>Courses</div><div>Last Modified</div>';
+
+    for (let x in response )
+    {
+      let numCourses = response[x].listOfSchedule.length
+      attachHTML += '<div>' + response[x].schedule + '</div><div>' + response[x].fName + '</div><div>' + numCourses.toString() + '</div><div>' + response[x].lastModDate + '</div>';
+    }
+    attachHTML +='</div>';
+    return attachHTML;
   }
   parseResultLimited(response): string{
     var attachHTML = ""

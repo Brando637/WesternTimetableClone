@@ -630,9 +630,6 @@ app.get('/api/schedule/:scheduleName', (req, res) => {
                 }
             }
 
-            //res.render('indexResults', { resultingSchedule: data[x].listOfSchedule, make: true, make2: false });
-
-
             //If there is no schedule with the entered name then we state to the user that it does not exist
             else 
             {
@@ -646,18 +643,40 @@ app.get('/api/schedule/:scheduleName', (req, res) => {
     
 });
 
-app.get('/api/schedules', (req,res) => {
+app.get('/api/schedules/public', (req,res) => {
     let data = require('./schedule-data.json');
-    let listSubject =[];
+    let scheduleList =[];
 
-    for(x in data)
+    if(data === undefined || data.length == 0)
     {
-        
+        res.status(200).send(JSON.stringify("Sorry but there are no schedules in the database."));
     }
+
+    else
+    {
+        for(x in data)
+        {
+            if(scheduleList.length > 10)
+            {
+                break;
+            }
+            else
+            {
+                if(data[x].status == 'public')
+                {
+                    data[x].owner = 'null';
+                    scheduleList.push(data[x]);
+                }
+            }
+            
+        }
+        res.status(200).send( scheduleList );
+    }
+
+   
 });
 
 app.get('/api/schedules/private',passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log("Success on the server");
 
     let data = require('./schedule-data.json');
     let scheduleList =[];

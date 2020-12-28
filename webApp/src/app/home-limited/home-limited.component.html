@@ -39,8 +39,9 @@
         <mat-card>
             <mat-toolbar color="pink">Get Public Schedule</mat-toolbar>
             <button mat-raised-button color="lightblue" (click)="onPublicSchedules()">Get</button>
+            <div [innerHtml]="htmlSchedule"></div>
         </mat-card>
-        
+
         <mat-card>
             <mat-slide-toggle [formControl]="enable" (change)="onChange($event)">Expand</mat-slide-toggle>
             <div class="outputNotif" id="outputNotif">

@@ -18,6 +18,7 @@ export class HomeLimitedComponent implements OnInit {
 
   htmlToAdd:SafeHtml;
   htmlToAddFull:SafeHtml;
+  htmlSchedule:SafeHtml;
   responseHolder: object;
   enable = new FormControl();
   public limited: boolean = true;
@@ -103,10 +104,29 @@ export class HomeLimitedComponent implements OnInit {
   onPublicSchedules(): void{
     this.appService.getSchedules().subscribe(
       (response) => {
-
+        console.log(response);
+        var attachHTML = "";
+        attachHTML = this.parseResultSchedulePublic(response);
+        this.htmlSchedule = this.sanitizer.bypassSecurityTrustHtml("<ul>" + attachHTML + '</ul>');
       },
-      (error) => {}
+      (error) => {
+        console.log(error);
+      }
     );
+  }
+
+  parseResultSchedulePublic(response): string{
+    var attachHTML = "";
+
+    attachHTML += '<div class=grid-containerSchedule><div>Schedule</div><div>Username</div><div>Courses</div><div>Last Modified</div>';
+
+    for (let x in response )
+    {
+      let numCourses = response[x].listOfSchedule.length
+      attachHTML += '<div>' + response[x].schedule + '</div><div>' + response[x].fName + '</div><div>' + numCourses.toString() + '</div><div>' + response[x].lastModDate + '</div>';
+    }
+    attachHTML +='</div>';
+    return attachHTML;
   }
 
   parseResultLimited(response): string{

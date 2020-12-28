@@ -25,3 +25,9 @@
     grid-gap: 20px;
     background-color: #DAF7A6;
 }
+.grid-containerSchedulePub {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-gap: 20px;
+    background-color: #DAF7A6;
+}

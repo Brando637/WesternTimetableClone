@@ -28,7 +28,7 @@ export class HttpCallsService {
   }
 
   getSchedules(){
-    return this.http.get(this.rootURL + '/schedules', {params: {schedules: "limited"}})
+    return this.http.get(this.rootURL + '/schedules/public');
   }
 
   getSchedulesPrivate(){
