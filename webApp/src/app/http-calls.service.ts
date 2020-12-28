@@ -19,7 +19,7 @@ export class HttpCallsService {
     return this.http.post(this.rootURL + '/keyword', theForm);
   }
 
-  createSchedule(theForm: any, scheduleName: string){
+  createSchedule(theForm: any, scheduleName: string): Observable<any>{
     return this.http.post(this.rootURL + '/schedule/' + scheduleName, theForm);
   }
 
@@ -29,6 +29,10 @@ export class HttpCallsService {
 
   getSchedules(){
     return this.http.get(this.rootURL + '/schedules', {params: {schedules: "limited"}})
+  }
+
+  getSchedulesPrivate(){
+    return this.http.get(this.rootURL + '/schedules/private');
   }
 
   addCourses(theForm: any, scheduleName: string, scheduleForm: string){

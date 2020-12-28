@@ -35,6 +35,11 @@
         </mat-card>
 
         <mat-card>
+            <mat-toolbar color="pink">Your created schedules</mat-toolbar>
+            <div [innerHtml]="htmlSchedule"></div>
+        </mat-card>
+
+        <mat-card>
             <mat-toolbar color="pink">Create a Schedule</mat-toolbar>
             <form [formGroup]="createSchedule" (ngSubmit)="onSubmitSchedule()">
 
@@ -53,8 +58,6 @@
                     <mat-label>Visibility(Optional)</mat-label>
                     <input matInput placeHolder="Either type in 'public' or 'private'"type="text" formControlName="visibility" name="visibility" id="visibility">
                 </mat-form-field>
-
-                <input type='hidden' formControlName="userID" name="userID" id="userID">
 
                 <button mat-raised-button color="lightblue" type="submit">Submit</button>
             </form>

@@ -33,6 +33,13 @@ const UserSchema = new mongoose.Schema({
     confirmed: {
         type: Boolean,
         default: false
+    },
+    numSchedules: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0,
+        max: 20
     }
 });
 

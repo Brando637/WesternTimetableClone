@@ -139,7 +139,7 @@ app.post('/api/user/login', async(req, res, next) => {
                 if(error) return next(error);
 
                 const body = { _id: user._id, email: user.email };
-                const token = jwt.sign({ user: body }, 'TOP_SECRET', { expiresIn: 600 });
+                const token = jwt.sign({ user: body }, 'TOP_SECRET', { expiresIn: 1200 });
                 const refreshToken = randToken.uid(256);
                 refreshTokens[refreshToken] = user.email;
                 return res.json({ success: true, jwt: token, refreshToken: refreshToken });
@@ -165,7 +165,7 @@ app.post('/api/user/refresh', function(req, res) {
     if(refreshToken in refreshTokens)
     {
         const body = { email: refreshTokens[refreshToken] };
-        const token = jwt.sign({ user: body }, 'TOP_SECRET', { expiresIn: 600 });
+        const token = jwt.sign({ user: body }, 'TOP_SECRET', { expiresIn: 1200 });
         res.json({ jwt: token });
     }
     else
@@ -274,7 +274,6 @@ app.post('/api/resultList', (req,res) => {
 app.post('/api/subjects', (req,res) => {
     let listSubject = [];
     let testListSubject = [];
-    console.log(req.user.user.email);
 
     for (let i = 0; i < timeTable.length; i++)
     {
@@ -389,16 +388,13 @@ app.post('/api/subjects/courses', (req,res) => {
 app.post('/api/keyword', (req,res) => {
     let listSubject =[];
     let keywordSan = req.sanitize(req.body.keyword);
-    //console.log(keywordDictionary.get(keywordSan, 1, 0.2));
 
     //SoftMatch the entered keyword with the entire dictionary and find what matches the best with what the user entered
     let result = keywordDictionary.get(keywordSan, 1, 0.2)
 
     //We now need to iterate through each of the results and add them into a table to send to the user for them to be able to view
     for(let i = 0; i < result.length; i++)
-    {
-        console.log(result[i][1]);
-        
+    {        
         //For each of index of the result we need to see if it matches the catalog_nbr or the className and then add it to the array we will send to the user
         for(let j = 0; j < timeTable.length; j++)
         {
@@ -413,49 +409,73 @@ app.post('/api/keyword', (req,res) => {
 //Create a new schedule
 app.post('/api/schedule/:scheduleName', passport.authenticate('jwt', { session: false }), (req, res) => {
     let base = require('./schedule-dataTemplate.json');
-    let data = require('./schedule-data.json');
+    let data = require('./schedule-data.json');;
 
-    if(req.sanitize(req.body.userID) !== undefined)
-    {
-        base.schedule = req.sanitize(req.body.scheduleName);
-    }
-    if(req.sanitize(req.body.description) !== undefined)
-    {
-        base.description = req.sanitize(req.body.description);
-    }
+    let emailSan = req.sanitize(req.user.user.email);
+    let scheduleNameSan = req.sanitize(req.body.scheduleName);
+    let descriptionSan = req.sanitize(req.body.description);
+    let visibilitySan = req.sanitize(req.body.visibility);
 
-    if(req.sanitize(req.body.visibility) !== undefined)
-    {
-        base.status = req.sanitize(req.body.visibility);
-    }
-    let date = new Date();
-    base.lastModDate = date.toString();
-
-    /*Need to check if the entered schedule already exists
+     /*Need to check if the entered schedule already exists
     If it does already exist then we need to inform the user
     and not write a new schedule. 
     If it does not exist then we will create the new schedule*/
-    
-    let test = data.some(x => x.schedule ==req.sanitize(req.body.scheduleName));
+    let test = data.some(x => x.schedule == scheduleNameSan );
     if(test == true)
     {
         //res.render('indexError',{errorNum: 0});
         res.status(200).send(JSON.stringify("Sorry, but the schedule name already exists"));
     }
-    
+
+    //We create the new schedule
     else
     {
-        data.push(base);
-        fs.writeFile('schedule-data.json', JSON.stringify(data, null, "\n"), (err) => {
-            if (err) { console.log(err); }
-    
-            else 
-            { //res.render('indexSuccess', {successNum: 0}); 
-                res.status(200).send(JSON.stringify("The schedule was successfully created"));
-            }
-        });
+        User.findOne({ email: emailSan })
+            .then(user => {
+                try 
+                {
+                    //We first check to see if they have exceeded the number of schedules that they can create
+                    if(user.numSchedules == 20)
+                    {
+                        res.status(200).send(JSON.stringify("Sorry, but you have created the max 20 schedules. Please delete a schedule first."))
+                    }
+
+                    else
+                    {
+                        base.owner = emailSan;
+                        base.fName = user.fName;
+                        if (scheduleNameSan !== undefined) {
+                            base.schedule = scheduleNameSan;
+                        }
+                        if (descriptionSan !== undefined) {
+                            base.description = descriptionSan;
+                        }
+                        if ((visibilitySan !== undefined) && (visibilitySan == 'public')) {
+                            base.status = visibilitySan;
+                        }
+                        let date = new Date();
+                        base.lastModDate = date.toString();
+                        
+
+                        data.push(base);
+                        fs.writeFile('schedule-data.json', JSON.stringify(data, null, "\n"), (err) => {
+                            if (err) { console.log(err); }
+                            else 
+                            {
+                                user.numSchedules += 1;
+                                user.save();
+                                res.status(200).send(JSON.stringify({ success: true, msg:"The schedule was successfully created" }));
+                            }
+                        });
+                    }
+                    
+                }
+                catch (error) 
+                {
+                    console.log(error);
+                }
+            });
     }
-    
 });
 
 app.delete('/api/schedule/:scheduleName', (req, res) => {
@@ -502,8 +522,8 @@ app.delete('/api/schedules', (req, res) => {
 
 app.get('/api/schedule/:scheduleName', (req, res) => {
     let data = require('./schedule-data.json');
-    console.log(req.params);
-    console.log(req.query);
+    // console.log(req.params);
+    // console.log(req.query);
     let theSchedule = req.sanitize(req.query.scheduleName);
     let theSubject = req.sanitize(req.query.subject);
     let theCourseNumber = req.sanitize(req.query.courseNumber);
@@ -634,6 +654,32 @@ app.get('/api/schedules', (req,res) => {
     {
         
     }
+});
+
+app.get('/api/schedules/private',passport.authenticate('jwt', { session: false }), (req, res) => {
+    console.log("Success on the server");
+
+    let data = require('./schedule-data.json');
+    let scheduleList =[];
+    let emailSan = req.sanitize(req.user.user.email);
+
+    //Check to make sure that the file is not empty first
+    if(data === undefined || data.length == 0)
+    {
+        res.status(200).send(JSON.stringify("Sorry, but there are no schedules in the database"))
+    }
+
+    //Here we will find all the schedules that belong to the user
+    else
+    {
+        //Iterate through the entire file and find all the schedules
+        for( x in data)
+        {
+            if(data[x].owner == emailSan)
+            {scheduleList.push(data[x]);}
+        }
+    }
+    res.status(200).send( scheduleList );
 });
 
 app.post('/api/schedule/:schedulename/:scheduleForm', (req, res) => {

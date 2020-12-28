@@ -21,6 +21,7 @@ export class HomeFullComponent implements OnInit {
 
   htmlToAdd:SafeHtml;
   htmlToAddFull:SafeHtml;
+  htmlSchedule:SafeHtml;
   responseHolder: object;
   enable = new FormControl();
   public limited: boolean = true;
@@ -49,6 +50,16 @@ export class HomeFullComponent implements OnInit {
   }
   ngOnInit(): void {
     this.initializeForm();
+
+    this.appService.getSchedulesPrivate().subscribe(
+      (response) => {
+        var attachHTML = "";
+        attachHTML = this.parseResultSchedule(response);
+        this.htmlSchedule = this.sanitizer.bypassSecurityTrustHtml("<ul>" + attachHTML + '</ul>');
+
+      },
+      (error) => console.log(error)
+    );
   }
 
   logout(): void {
@@ -77,8 +88,7 @@ export class HomeFullComponent implements OnInit {
     this.createSchedule = this.fb.group({
       scheduleName: new FormControl('', [Validators.required]),
       description:"",
-      visibility:"",
-      userID: "",
+      visibility:""
     })
   }
 
@@ -96,12 +106,25 @@ export class HomeFullComponent implements OnInit {
   }
 
   onSubmitSchedule(): void {
-    let userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    this.createSchedule.value.userID = userInfo.user;
     console.log(this.createSchedule.value)
     this.appService.createSchedule(this.createSchedule.value, this.createSchedule.value.scheduleName).subscribe(
-      (response) => {},
-      (error) => {}
+      (response) => {
+        if(response.success == true)
+        {
+          this.appService.getSchedulesPrivate().subscribe(
+            (innerResponse) => {
+              var attachHTML = "";
+              attachHTML = this.parseResultSchedule(innerResponse);
+              this.htmlSchedule = this.sanitizer.bypassSecurityTrustHtml("<ul>" + attachHTML + '</ul>');
+      
+            },
+            (error) => console.log(error)
+          );
+        }
+      },
+      (error) => {
+        console.log(error);
+      }
     );
   }
 
@@ -120,8 +143,6 @@ export class HomeFullComponent implements OnInit {
   }
 
   onSubmitCourse(): void {
-    console.log(this.searchCourseForm);
-    console.log(this.searchCourseForm.value);
     this.appService.searchCourse(this.searchCourseForm.value).subscribe(
       (response) => {
         var attachHTML = "";
@@ -160,6 +181,23 @@ export class HomeFullComponent implements OnInit {
     );
   }
 
+  parseResultSchedule(response): string{
+    var attachHTML = "";
+
+    attachHTML += '<div class=grid-containerSchedule><div>Schedule</div><div>Courses</div><div>Description</div><div>Status</div><div>Last Modified</div>';
+
+    for (let x in response )
+    {
+      console.log(response[x]);
+      console.log(response[x].schedule + "\n" + response[x].listOfSchedule)
+      attachHTML += '<div>' + response[x].schedule + '</div><div>' + response[x].listOfSchedule + '</div><div>' + response[x].description + '</div><div>' + response[x].status + '</div><div>' + response[x].lastModDate + '</div>';
+    }
+    attachHTML +='</div>';
+    return attachHTML;
+  }
+  parseResultSchedulePub(response, publicSchedule): string{
+    return "";
+  }
   parseResultLimited(response): string{
     var attachHTML = ""
 
