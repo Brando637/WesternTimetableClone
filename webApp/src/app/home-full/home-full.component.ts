@@ -5,6 +5,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpCallsService } from '../http-calls.service';
 import { AuthenticateService } from '../authenticate.service';
 import { Router } from '@angular/router';
+import { DialogService } from './mat-confirm-dialog/dialog.service';
 
 @Component({
   selector: 'app-home-full',
@@ -40,7 +41,7 @@ export class HomeFullComponent implements OnInit {
     }
   }
 
-  constructor(private fb: FormBuilder, private appService: HttpCallsService, private sanitizer: DomSanitizer, private authService: AuthenticateService, private route: Router) {}
+  constructor(private fb: FormBuilder, private appService: HttpCallsService, private sanitizer: DomSanitizer, private authService: AuthenticateService, private route: Router, private dialogService: DialogService) {}
 
   public hasError = (controlName: string, errorName: string) => {
     return this.createSchedule.controls[controlName].hasError(errorName);
@@ -85,8 +86,7 @@ export class HomeFullComponent implements OnInit {
       keyword: new FormControl( '', [Validators.minLength(4)] )
     });
     this.deleteScheduleForm = this.fb.group({
-      deleteSchedule:"",
-      userID: ""
+      deleteSchedule:""
     });
     this.createSchedule = this.fb.group({
       scheduleName: new FormControl('', [Validators.required]),
@@ -133,16 +133,23 @@ export class HomeFullComponent implements OnInit {
 
   onDeleteSchedule(): void {
     console.log(this.deleteScheduleForm.value);
-    let userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    this.deleteScheduleForm.value.userID = userInfo.user;
-    this.appService.deleteSchedule(this.deleteScheduleForm.value.deleteSchedule).subscribe(
-      (response) => {
-        console.log("The response from the server is " + response)
-        this.htmlToAdd = '<h2>'+response.toString()+'</h2>';
-        this.htmlToAddFull = '<h2>'+response.toString()+'</h2>';
-      },
-      (error) => console.log("The error returned from the server is" + error)
-    );
+
+    this.dialogService.openConfirmDialog("Are you sure you want to delete this schedule?")
+    .afterClosed().subscribe( response => {
+      if(response == true)
+      {
+        this.appService.deleteSchedule(this.deleteScheduleForm.value.deleteSchedule).subscribe(
+          (response) => {
+            console.log("The response from the server is " + response)
+            this.htmlToAdd = '<h2>'+response.toString()+'</h2>';
+            this.htmlToAddFull = '<h2>'+response.toString()+'</h2>';
+          },
+          (error) => console.log("The error returned from the server is" + error)
+        );
+      }
+    });
+
+    
   }
 
   onSubmitCourse(): void {

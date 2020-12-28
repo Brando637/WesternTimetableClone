@@ -480,14 +480,14 @@ app.post('/api/schedule/:scheduleName', passport.authenticate('jwt', { session: 
 
 app.delete('/api/schedule/:scheduleName', (req, res) => {
     let data = require('./schedule-data.json');
-
+    let scheduleName = req.sanitize(req.params.scheduleName)
     for (x in data)
     {
-        let test = data.some(z => z.schedule ==req.sanitize(req.params.scheduleName));
+        let test = data.some(z => z.schedule == scheduleName);
         //If there is a schedule that does have the specified name then we will go through the JSON file and find at which index it is at
         if(test)
         {
-            if (data[x].schedule == req.sanitize(req.params.scheduleName))
+            if (data[x].schedule == scheduleName)
             {
                 console.log(x);
                 data.splice(x, 1);

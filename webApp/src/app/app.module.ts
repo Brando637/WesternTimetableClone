@@ -21,7 +21,9 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatSelectModule} from '@angular/material/select';
 import {MatExpansionModule} from '@angular/material/expansion';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle'
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
 
 //Login/Register Section
 import { UserComponent } from './user/user.component';
@@ -36,6 +38,7 @@ import { AccUsePoliComponent } from './policy/acc-use-poli/acc-use-poli.componen
 import { DmcaNotTakPoliComponent } from './policy/dmca-not-tak-poli/dmca-not-tak-poli.component';
 import { AdministratorComponent } from './user/administrator/administrator.component';
 import { TokenInterceptor } from './token.interceptor';
+import { MatConfirmDialogComponent } from './home-full/mat-confirm-dialog/mat-confirm-dialog.component';
 
 
 @NgModule({
@@ -49,7 +52,8 @@ import { TokenInterceptor } from './token.interceptor';
     SecAndPrivComponent,
     AccUsePoliComponent,
     DmcaNotTakPoliComponent,
-    AdministratorComponent
+    AdministratorComponent,
+    MatConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -66,6 +70,8 @@ import { TokenInterceptor } from './token.interceptor';
     MatSelectModule,
     MatExpansionModule,
     MatSlideToggleModule,
+    MatDialogModule,
+    MatIconModule,
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes)
@@ -76,6 +82,7 @@ import { TokenInterceptor } from './token.interceptor';
       useClass: TokenInterceptor,
       multi: true
     }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[MatConfirmDialogComponent]
 })
 export class AppModule { }
