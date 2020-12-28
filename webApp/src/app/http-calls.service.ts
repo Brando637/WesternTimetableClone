@@ -50,4 +50,8 @@ export class HttpCallsService {
   resendEmail(theForm: any): Observable<any>{
     return this.http.post(this.rootURL + '/user/resendEmail', theForm);
   }
+
+  reviewCourse(theForm: any){
+    return this.http.post(this.rootURL + '/review', theForm);
+  }
 }

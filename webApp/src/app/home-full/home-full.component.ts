@@ -19,6 +19,7 @@ export class HomeFullComponent implements OnInit {
   searchCourseForm: FormGroup;
   searchCourseFormKey: FormGroup;
   createSchedule: FormGroup;
+  reviewForm: FormGroup;
 
   htmlToAdd:SafeHtml;
   htmlToAddFull:SafeHtml;
@@ -92,11 +93,11 @@ export class HomeFullComponent implements OnInit {
       scheduleName: new FormControl('', [Validators.required]),
       description:"",
       visibility:""
-    })
-  }
-
-  confirmDialog(): void{
-    
+    });
+    this.reviewForm = this.fb.group({
+      reviewCourse: "",
+      reviewDescrip: ""
+    });
   }
 
   expand(): void {
@@ -199,6 +200,17 @@ export class HomeFullComponent implements OnInit {
         var attachHTML = "";
         attachHTML = this.parseResultSchedulePublic(response);
         this.htmlSchedulePub = this.sanitizer.bypassSecurityTrustHtml("<ul>" + attachHTML + '</ul>');
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  onReviewCourse(): void{
+    this.appService.reviewCourse(this.reviewForm.value).subscribe(
+      (response) => {
+        console.log(response);
       },
       (error) => {
         console.log(error);

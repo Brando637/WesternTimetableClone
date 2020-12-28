@@ -332,13 +332,11 @@ app.post('/api/courses', (req,res) => {
 
     if(listSubject === undefined || listSubject.length == 0)
     {
-        //res.render('indexError',{errorNum: 1});
         res.status(200).send(JSON.stringify("Sorry, but the course could not be found"));
     }
 
     else
     {
-        //res.render('indexResults', {listSubject: listSubject, make: false, make2: true});
         res.status(200).send(testListSubject);
     }
 });
@@ -778,4 +776,44 @@ app.post('/api/schedule/:schedulename/:scheduleForm', (req, res) => {
             break;
         }
     }
+});
+
+app.post('/api/review', passport.authenticate('jwt', { session: false }), (req, res) => {
+    let courseSan = req.sanitize(req.body.reviewCourse);
+    let descriptionSan = req.sanitize(req.body.reviewDescrip);
+    let date = new Date();
+
+    User.findOne({ emailToken: req.query.token })
+    .then(user => {
+        if(!user)
+        {
+            console.log("There was a problem finding the user");
+            res.status(200).send(JSON.stringify("There was a problem adding the review to the course"));
+        }
+        else
+        {
+            try
+            {
+                for (x in timeTable) {
+                    if (timeTable[x].catalog_nbr == courseSan) {
+                        timeTable[x].review.fName = user.fName;
+                        timeTable[x].review.timeModified = date.toString();
+                        timeTable[x].review.reviewDescrip = descriptionSan;
+                    }
+                }
+                fs.writeFile('Lab3-timetable-data.json', JSON.stringify(timeTable, null), (err) => {
+                    if (err) { console.log(err); }
+                    else 
+                    {
+                        res.status(200).send(JSON.stringify("The review was succesfully added to the course"));
+                    }
+                });
+            }
+
+            catch(error)
+            {
+                console.log(error);
+            }
+        }
+    })
 });
