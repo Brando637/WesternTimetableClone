@@ -5,6 +5,7 @@ const path = require('path');
 const expressSanitizer = require('express-sanitizer');//Used to sanitize all incoming requests
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const http = require('http');
 
 //User Model
 const User = require('./models/User');
@@ -41,7 +42,7 @@ let transporter = nodemailer.createTransport({
 
 
 const PORT = process.env.PORT || 3000;
-
+//const server = http.createServer();
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));//We make a place for the server to start listening on a port
 
 //Homepage 
