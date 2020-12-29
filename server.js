@@ -45,8 +45,8 @@ const PORT = process.env.PORT || 3000;
 //const server = http.createServer();
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));//We make a place for the server to start listening on a port
 app.use('/', express.static(path.join(__dirname, 'se3316-bmichau-lab5')));
-app.use((res, req, next) => {
-    res.sendFile(__dirname, 'se3316-bmichau-lab5', 'index.html');
+app.get('/', (req, res) => {
+    res.sendFile('index.html');
 });
 
 
