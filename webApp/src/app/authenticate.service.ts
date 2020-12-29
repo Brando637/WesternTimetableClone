@@ -17,6 +17,7 @@ export class AuthenticateService {
 
   rootURL = '/api'
 
+  //When a response comes back from the server then the 'tap' will take the incoming JWT tokens and add them to the browser 
   login(data):Observable<any>{
     return this.http.post<any>(this.rootURL + '/user/login',data)
     .pipe(
@@ -28,6 +29,7 @@ export class AuthenticateService {
     );
   }
 
+  //Remove the JWT tokens from the browser so that the user can no longer make certain requests to the server
   logout() {
     return this.http.post<any>(this.rootURL + '/user/logout', {
       'refreshToken': this.getRefreshToken()

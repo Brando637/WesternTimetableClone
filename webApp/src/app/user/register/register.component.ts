@@ -33,6 +33,9 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  /*Upon registering to the website, send the information to the server to create the account
+   with the website. If the server responds with a success then tell the user that they need
+   to go to their email to go and verify their account*/
   onRegister(): void {
     if(this.registerForm.valid)
     {

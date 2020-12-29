@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 
-//For creating a better looking website
+//For creating a better looking website using Angular Materials
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -29,16 +29,22 @@ import {MatIconModule} from '@angular/material/icon';
 import { UserComponent } from './user/user.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
+import { AdministratorComponent } from './user/administrator/administrator.component';
+
+//Main Section of the Website
 import { HomeLimitedComponent } from './home-limited/home-limited.component';
 import { HomeFullComponent } from './home-full/home-full.component';
+import { TokenInterceptor } from './token.interceptor';
+import { MatConfirmDialogComponent } from './home-full/mat-confirm-dialog/mat-confirm-dialog.component';
 
 import { appRoutes } from './routes';
+
+//Legal Sections (INCOMPLETE SECTIONS)
 import { SecAndPrivComponent } from './policy/sec-and-priv/sec-and-priv.component';
 import { AccUsePoliComponent } from './policy/acc-use-poli/acc-use-poli.component';
 import { DmcaNotTakPoliComponent } from './policy/dmca-not-tak-poli/dmca-not-tak-poli.component';
-import { AdministratorComponent } from './user/administrator/administrator.component';
-import { TokenInterceptor } from './token.interceptor';
-import { MatConfirmDialogComponent } from './home-full/mat-confirm-dialog/mat-confirm-dialog.component';
+
+
 
 
 @NgModule({

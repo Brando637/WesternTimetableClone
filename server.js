@@ -2,7 +2,7 @@ const express = require ('express');//Load the express module
 const app = express();//Create an express object, a web application is created
 const fs = require('fs');//Here to read JSON file later asynchronously
 const path = require('path');
-const expressSanitizer = require('express-sanitizer');
+const expressSanitizer = require('express-sanitizer');//Used to sanitize all incoming requests
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
@@ -109,10 +109,12 @@ const authReg = () => {
     }
 }
 
+//Called upon when the user logs into the website
 app.post('/api/user/login', async(req, res, next) => {
     passport.authenticate('login', async (err, user, info) => {
         try
         {
+            //Determine which error occurred when trying to login and return the message to the client
             if( user == false && info.message == "Wrong Password" )
             {
                 return res.status(200).send(JSON.stringify({ success: false, msg: info.message }));
@@ -135,11 +137,13 @@ app.post('/api/user/login', async(req, res, next) => {
                 const error = new Error('An error occurred.');
                 return next(error);
             }
+            
+            //If the user was found in the database, sign a JWT token and send that to the client
             req.login( user, { session: false }, async(error) => {
                 if(error) return next(error);
 
                 const body = { _id: user._id, email: user.email };
-                const token = jwt.sign({ user: body }, 'TOP_SECRET', { expiresIn: 1200 });
+                const token = jwt.sign({ user: body }, 'TOP_SECRET', { expiresIn: 9000 });
                 const refreshToken = randToken.uid(256);
                 refreshTokens[refreshToken] = user.email;
                 return res.json({ success: true, jwt: token, refreshToken: refreshToken });
@@ -152,6 +156,7 @@ app.post('/api/user/login', async(req, res, next) => {
     })(req, res, next);
 });
 
+//Remove the user from the list of logged in users 
 app.post('/api/user/logout', function(req, res) {
     const refreshToken = req.body.refreshToken;
     if( refreshToken in refreshTokens )
@@ -165,7 +170,7 @@ app.post('/api/user/refresh', function(req, res) {
     if(refreshToken in refreshTokens)
     {
         const body = { email: refreshTokens[refreshToken] };
-        const token = jwt.sign({ user: body }, 'TOP_SECRET', { expiresIn: 1200 });
+        const token = jwt.sign({ user: body }, 'TOP_SECRET', { expiresIn: 9000 });
         res.json({ jwt: token });
     }
     else
@@ -173,6 +178,8 @@ app.post('/api/user/refresh', function(req, res) {
         res.sendStatus(401);
     }
 });
+
+
 //If auth() comes back as true then the next function will be called and state that the user was authenticated
 app.post('/api/user/signup', authReg(), (req, res) => {
     if(auth)
@@ -181,6 +188,7 @@ app.post('/api/user/signup', authReg(), (req, res) => {
     }
 });
 
+//Create a new email to send to the user if they request for a new one
 app.post('/api/user/resendEmail', (req, res) => {
     const email = req.sanitize(req.body.email);
     User.findOne({ email: email })
@@ -220,6 +228,7 @@ app.post('/api/user/resendEmail', (req, res) => {
     });
 });
 
+//When the user has clicked on the link from the email they will be sent to this section of the server to verify their email
 app.get('/verify-email', (req, res) => {
     User.findOne({ emailToken: req.query.token })
     .then(user => {
@@ -227,6 +236,8 @@ app.get('/verify-email', (req, res) => {
         {
             res.send("<h1>Sorry, Token is invalid.<h1>")
         }
+        //If the token that was part of the URL matches one that was found in the database then the user's email will be 
+        //verified and they can then access te rest of the website
         else
         {
             try
@@ -438,6 +449,7 @@ app.post('/api/schedule/:scheduleName', passport.authenticate('jwt', { session: 
                         res.status(200).send(JSON.stringify("Sorry, but you have created the max 20 schedules. Please delete a schedule first."))
                     }
 
+                    //If not then we will create a new schedule with the information that they passed from the client
                     else
                     {
                         base.owner = emailSan;
@@ -456,6 +468,7 @@ app.post('/api/schedule/:scheduleName', passport.authenticate('jwt', { session: 
                         
 
                         data.push(base);
+                        //Write the new schedule into the file and save it
                         fs.writeFile('schedule-data.json', JSON.stringify(data, null, "\n"), (err) => {
                             if (err) { console.log(err); }
                             else 
@@ -476,6 +489,7 @@ app.post('/api/schedule/:scheduleName', passport.authenticate('jwt', { session: 
     }
 });
 
+//Deleting a schedule from the user
 app.delete('/api/schedule/:scheduleName', passport.authenticate('jwt', { session: false }), (req, res) => {
     let data = require('./schedule-data.json');
     let scheduleName = req.sanitize(req.params.scheduleName)
@@ -498,8 +512,7 @@ app.delete('/api/schedule/:scheduleName', passport.authenticate('jwt', { session
         }
         else
         {
-            res.status(200).send(JSON.stringify("Sorry, the entered schedule does not exist in the database"))
-            //res.render('indexError', {errorNum: 2});
+            res.status(200).send(JSON.stringify("Sorry, the entered schedule does not exist in the database"));
             break;
         }
         
@@ -507,12 +520,14 @@ app.delete('/api/schedule/:scheduleName', passport.authenticate('jwt', { session
     
 });
 
+
+//Delete all of the schedules from the file
 app.delete('/api/schedules', (req, res) => {
     let data = require('./schedule-data.json');
     data.splice(0,data.length);
     fs.writeFile('schedule-data.json', JSON.stringify(data, null, "\n"), (err) => {
         if (err) {console.log(err); }
-        else{ res.status(200).send(JSON.stringify("All of the schedules have been deleted"));//res.render('indexSuccess', { successNum: 2}); 
+        else{ res.status(200).send(JSON.stringify("All of the schedules have been deleted"));
     }
     });
     
@@ -520,8 +535,8 @@ app.delete('/api/schedules', (req, res) => {
 
 app.get('/api/schedule/:scheduleName', (req, res) => {
     let data = require('./schedule-data.json');
-    // console.log(req.params);
-    // console.log(req.query);
+
+    //Sanitize the input from the request
     let theSchedule = req.sanitize(req.query.scheduleName);
     let theSubject = req.sanitize(req.query.subject);
     let theCourseNumber = req.sanitize(req.query.courseNumber);
@@ -641,6 +656,7 @@ app.get('/api/schedule/:scheduleName', (req, res) => {
     
 });
 
+//Retrieval of 10 schedules that have a public visibility 
 app.get('/api/schedules/public', (req,res) => {
     let data = require('./schedule-data.json');
     let scheduleList =[];
@@ -654,10 +670,13 @@ app.get('/api/schedules/public', (req,res) => {
     {
         for(x in data)
         {
+            //Check that we have not already added 10 schedules to the list that will be sent to the client
             if(scheduleList.length > 10)
             {
                 break;
             }
+
+            //Add the schedule to the list and remove the owner's name that is attached to it
             else
             {
                 if(data[x].status == 'public')
@@ -674,6 +693,7 @@ app.get('/api/schedules/public', (req,res) => {
    
 });
 
+//Retrieve all up to the max of 20 schedules that the user has created
 app.get('/api/schedules/private',passport.authenticate('jwt', { session: false }), (req, res) => {
 
     let data = require('./schedule-data.json');
@@ -778,6 +798,7 @@ app.post('/api/schedule/:schedulename/:scheduleForm', (req, res) => {
     }
 });
 
+//Add a review to a course
 app.post('/api/review', passport.authenticate('jwt', { session: false }), (req, res) => {
     let courseSan = req.sanitize(req.body.reviewCourse);
     let descriptionSan = req.sanitize(req.body.reviewDescrip);
@@ -801,6 +822,7 @@ app.post('/api/review', passport.authenticate('jwt', { session: false }), (req, 
                         timeTable[x].review.reviewDescrip = descriptionSan;
                     }
                 }
+                //Does not work correctly, do not demonstrate or else it will break the file that everything is being written too.
                 fs.writeFile('Lab3-timetable-data.json', JSON.stringify(timeTable, null), (err) => {
                     if (err) { console.log(err); }
                     else 

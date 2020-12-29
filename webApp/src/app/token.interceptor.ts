@@ -7,6 +7,9 @@ import { catchError, filter, take, switchMap } from 'rxjs/operators';
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
+  //Everytime a request is made to the server it will be intercepted
+  //The request will get the JWT tokens attached to them so the server can use them
+  //when validating the user
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 

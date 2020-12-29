@@ -39,6 +39,9 @@ export class HomeLimitedComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private appService: HttpCallsService, private sanitizer: DomSanitizer, private route: Router) {}
 
+  /*hasError is used to detect errors that are made
+    to the form controller that it is attached to. If the error
+    occurs then the error is shown to the user*/
   public hasError = (controlName: string, errorName: string) => {
     return this.searchCourseFormKey.controls[controlName].hasError(errorName);
   }
@@ -56,6 +59,7 @@ export class HomeLimitedComponent implements OnInit {
       keyword: new FormControl( '', [Validators.minLength(4)] )
     });
   }
+  //If the user wants to register an account with the website to get full access to all the functions then it will be redirected to the register page
   register(): void{
     this.route.navigate(['/register']);
   }
@@ -69,9 +73,8 @@ export class HomeLimitedComponent implements OnInit {
     this.full = false;
   }
 
+  //Search for the course based on catalog_nbr or className
   onSubmitCourse(): void {
-    console.log(this.searchCourseForm);
-    console.log(this.searchCourseForm.value);
     this.appService.searchCourse(this.searchCourseForm.value).subscribe(
       (response) => {
         var attachHTML = "";
@@ -84,7 +87,7 @@ export class HomeLimitedComponent implements OnInit {
     );
   }
 
-
+  //Search the course based on a keyword that is at least a length of 4 characters long.
   onSubmitKey(): void{
     if(this.searchCourseFormKey.valid)
     {
@@ -101,6 +104,7 @@ export class HomeLimitedComponent implements OnInit {
     }
   }
 
+  //Retrieve the schedules that are listed as public and display them to the user
   onPublicSchedules(): void{
     this.appService.getSchedules().subscribe(
       (response) => {
@@ -115,6 +119,7 @@ export class HomeLimitedComponent implements OnInit {
     );
   }
 
+  //Parse through response from the server and create the list of public schedules that will be displayed
   parseResultSchedulePublic(response): string{
     var attachHTML = "";
 
@@ -129,6 +134,7 @@ export class HomeLimitedComponent implements OnInit {
     return attachHTML;
   }
 
+  //Parse the limited version of the response from the server when the user searches for a course
   parseResultLimited(response): string{
     var attachHTML = ""
 
@@ -149,6 +155,7 @@ export class HomeLimitedComponent implements OnInit {
     return attachHTML;
   }
 
+  //Parse the full version of the response from the server when the user searches for a course
   parseResultFull(response): string {
     var attachHTML = ""
 

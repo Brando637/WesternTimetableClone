@@ -11,6 +11,7 @@ export class HttpCallsService {
 
   rootURL = '/api'
 
+  //Most of the api calls that are made to the server
   searchCourse(theForm: any){
     return this.http.post<any>(this.rootURL + '/resultList', theForm );
   }

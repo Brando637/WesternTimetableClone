@@ -33,6 +33,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  /*Upon clicking the login button send the login form to the server 
+    Once a response is received determine if the login was a success.
+    If the login was a success then navigate the user to the full website page.
+    If there was some kind of error then notify the user of the error and do
+    the appropriate action*/
   onLogin(): void {
     if(this.loginForm.valid)
     {
@@ -44,6 +49,7 @@ export class LoginComponent implements OnInit {
           }
           if(response.success == false && response.msg == "You have not confirmed your email yet. Would you like to re-send your confirmation email?")
           {
+            //Display to the user the option to resend an email to confirm their email
             this.show = !this.show;
             this.htmlToAdd = '<h2>'+response.msg+'</h2>';
           }
@@ -60,6 +66,8 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  //If the response from the server found that they have not confirmed their email then call this funtion
+  //to make a call to the server to have it resend the email to the user
   resendEmail(): void{
     this.appService.resendEmail(this.loginForm.value).subscribe(
       (response) => {

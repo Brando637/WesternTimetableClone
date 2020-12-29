@@ -30,6 +30,7 @@ export class HomeFullComponent implements OnInit {
   public limited: boolean = true;
   public full: boolean = false;
 
+  //Used to change between the limited view of the search to the full view of the search
   onChange(ob: MatSlideToggleChange){
     console.log(ob.checked);
     if(ob.checked==true)
@@ -44,6 +45,9 @@ export class HomeFullComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private appService: HttpCallsService, private sanitizer: DomSanitizer, private authService: AuthenticateService, private route: Router, private dialogService: DialogService) {}
 
+  /*hasError and hasErrorKey is used to detect errors that are made
+    to the form controllers that they are attached to. If the error
+    occurs then the error is shown to the user*/
   public hasError = (controlName: string, errorName: string) => {
     return this.createSchedule.controls[controlName].hasError(errorName);
   }
@@ -54,19 +58,23 @@ export class HomeFullComponent implements OnInit {
   ngOnInit(): void {
     this.initializeForm();
 
+    //Retrieve the schedules that the user has created upon loading of the webpage
     this.appService.getSchedulesPrivate().subscribe(
       (response) => {
         var attachHTML = "";
         attachHTML = this.parseResultSchedule(response);
         this.htmlSchedule = this.sanitizer.bypassSecurityTrustHtml("<ul>" + attachHTML + '</ul>');
-
       },
       (error) => console.log(error)
     );
+
+    //Retrieve the public schedules from the server
     this.onPublicSchedules();
 
   }
 
+  //Call on the logout on the server to remove the user from the actively logged in users
+  //The token is removed from the browser upon logout
   logout(): void {
     this.authService.logout().subscribe(
       success => {
@@ -109,6 +117,7 @@ export class HomeFullComponent implements OnInit {
     this.full = false;
   }
 
+  //Create a new schedule
   onSubmitSchedule(): void {
     console.log(this.createSchedule.value)
     this.appService.createSchedule(this.createSchedule.value, this.createSchedule.value.scheduleName).subscribe(
@@ -132,11 +141,13 @@ export class HomeFullComponent implements OnInit {
     );
   }
 
+  //Delete a schedule
   onDeleteSchedule(): void {
-    console.log(this.deleteScheduleForm.value);
 
+    //Send the confirm dialog message to the pop up that will appear on the screen
     this.dialogService.openConfirmDialog("Are you sure you want to delete this schedule?")
     .afterClosed().subscribe( response => {
+      //Once the popup is closed, if the result from the popup is true then the schedule will be deleted from the server
       if(response == true)
       {
         this.appService.deleteSchedule(this.deleteScheduleForm.value.deleteSchedule).subscribe(
@@ -148,6 +159,7 @@ export class HomeFullComponent implements OnInit {
           (error) => console.log("The error returned from the server is" + error)
         );
 
+        //Update the list of private schedules for the user after the delete call is made to the server
         this.appService.getSchedulesPrivate().subscribe(
           (response) => {
             var attachHTML = "";
@@ -163,6 +175,7 @@ export class HomeFullComponent implements OnInit {
     
   }
 
+  //Search the server for the course based on the catalog_nbr or the className
   onSubmitCourse(): void {
     this.appService.searchCourse(this.searchCourseForm.value).subscribe(
       (response) => {
@@ -176,7 +189,7 @@ export class HomeFullComponent implements OnInit {
     );
   }
 
-
+  //Search the server for the course based on a entered keyword
   onSubmitKey(): void{
     if(this.searchCourseFormKey.valid)
     {
@@ -193,6 +206,7 @@ export class HomeFullComponent implements OnInit {
     }
   }
 
+  //Retrieve the pubic schedules from the server
   onPublicSchedules(): void{
     this.appService.getSchedules().subscribe(
       (response) => {
@@ -207,6 +221,7 @@ export class HomeFullComponent implements OnInit {
     );
   }
 
+  //Add the review to a course
   onReviewCourse(): void{
     this.appService.reviewCourse(this.reviewForm.value).subscribe(
       (response) => {
@@ -218,6 +233,7 @@ export class HomeFullComponent implements OnInit {
     );
   }
 
+  //Parse the response from the server and create the schedule list that will be displayed to the client
   parseResultSchedule(response): string{
     var attachHTML = "";
 
@@ -230,6 +246,8 @@ export class HomeFullComponent implements OnInit {
     attachHTML +='</div>';
     return attachHTML;
   }
+
+  //Parse the response from the server and create the schedule list that will be displayed to the client
   parseResultSchedulePublic(response): string{
     var attachHTML = "";
 
@@ -243,6 +261,8 @@ export class HomeFullComponent implements OnInit {
     attachHTML +='</div>';
     return attachHTML;
   }
+
+  //Parse the response from the server anc create the limited version of the response that will first de dsiplayed to the client until the toggle is used
   parseResultLimited(response): string{
     var attachHTML = ""
 
@@ -263,6 +283,8 @@ export class HomeFullComponent implements OnInit {
     return attachHTML;
   }
 
+  //Parse the response from the server and create the full version of the response
+  //It will not be displayed to the user until the toggle is switched on
   parseResultFull(response): string {
     var attachHTML = ""
 

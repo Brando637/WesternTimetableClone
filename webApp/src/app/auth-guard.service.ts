@@ -8,6 +8,7 @@ export class AuthGuardService implements CanActivate {
 
   constructor(private authService: AuthenticateService, private route: Router) { }
 
+  //Used to validate if a user can access certains routes on the website
   canActivate():boolean {
     if(this.authService.isLoggedIn())
     {
