@@ -44,11 +44,10 @@ let transporter = nodemailer.createTransport({
 const PORT = process.env.PORT || 3000;
 //const server = http.createServer();
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));//We make a place for the server to start listening on a port
-
-//Homepage 
-// app.get('/', (req, res) => {
-//     res.sendFile(process.cwd()+"/indexApp/dist/indexApp/index.html");
-// });
+app.use('/', express.static(path.join(__dirname, 'se3316-bmichau-lab5')));
+app.use((res, req, next) => {
+    res.sendFile(__dirname, 'se3316-bmichau-lab5', 'index.html');
+});
 
 
 //We need to add the JSON file that we will parse through
