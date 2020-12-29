@@ -15,6 +15,11 @@ import { DialogService } from './mat-confirm-dialog/dialog.service';
 })
 export class HomeFullComponent implements OnInit {
 
+    /*
+  How to insert html into the loaded page
+  https://stackoverflow.com/questions/60264854/dynamically-insert-mat-checkbox
+  */
+ 
   deleteScheduleForm: FormGroup;
   searchCourseForm: FormGroup;
   searchCourseFormKey: FormGroup;

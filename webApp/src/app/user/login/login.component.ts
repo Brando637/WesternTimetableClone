@@ -22,6 +22,14 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls[controlName].hasError(errorName);
   }
 
+  /*Inspiration for part of the login in Angular came from
+  https://morioh.com/p/7da7955083ea
+
+  Validators
+  https://levelup.gitconnected.com/simple-application-with-angular-6-node-js-express-2873304fff0f
+  Error Responses for validators
+  https://itnext.io/materror-cross-field-validators-in-angular-material-7-97053b2ed0cf
+  */
   ngOnInit(): void {
     this.initializeForm();
   }

@@ -7,7 +7,10 @@ import { AuthenticateService } from './authenticate.service'
 export class AuthGuardService implements CanActivate {
 
   constructor(private authService: AuthenticateService, private route: Router) { }
-
+  
+  /*
+  How to create route guards
+  https://blog.jscrambler.com/setting-up-authentication-using-angular-node-and-passport/*/
   //Used to validate if a user can access certains routes on the website
   canActivate():boolean {
     if(this.authService.isLoggedIn())

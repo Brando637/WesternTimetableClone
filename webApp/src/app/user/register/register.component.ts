@@ -16,6 +16,12 @@ export class RegisterComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthenticateService, private sanitizer: DomSanitizer) { }
 
+  /*
+  Vallidators
+  https://levelup.gitconnected.com/simple-application-with-angular-6-node-js-express-2873304fff0f
+  Error Responses for validators
+  https://itnext.io/materror-cross-field-validators-in-angular-material-7-97053b2ed0cf
+  */
   public hasError = (controlName: string, errorName: string) => {
     return this.registerForm.controls[controlName].hasError(errorName);
   }

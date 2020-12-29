@@ -9,6 +9,10 @@ import { Tokens } from '../app/tokens';
 })
 export class AuthenticateService {
 
+  /*
+  All except for login(), logout() and register() came from the following tutorial
+  https://www.youtube.com/watch?v=F1GUjHPpCLA&t=908s
+   */
   private readonly JWT_TOKEN = 'JWT_TOKEN';
   private readonly REFRESH_TOKEN = 'REFRESH_TOKEN';
   private loggedUser: string;

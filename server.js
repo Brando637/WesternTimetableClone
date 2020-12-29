@@ -137,7 +137,7 @@ app.post('/api/user/login', async(req, res, next) => {
                 const error = new Error('An error occurred.');
                 return next(error);
             }
-            
+            //Format comes from https://www.digitalocean.com/community/tutorials/api-authentication-with-json-web-tokensjwt-and-passport
             //If the user was found in the database, sign a JWT token and send that to the client
             req.login( user, { session: false }, async(error) => {
                 if(error) return next(error);
@@ -195,7 +195,7 @@ app.post('/api/user/resendEmail', (req, res) => {
     .then(user => {
         try
         {
-            console.log("We found someone but there is a problem with the email")
+            //Creating email message comes from the following tutorial https://www.youtube.com/watch?v=Zyc9pZrFoWE&t=420s
             const emailMsg = {
                 from: 'se3316testlab5@gmail.com',
                 to: email,

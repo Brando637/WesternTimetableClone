@@ -4,6 +4,11 @@ import { AuthenticateService } from './authenticate.service';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, filter, take, switchMap } from 'rxjs/operators';
 
+
+/*
+Format for creating entire token interceptor function
+https://www.youtube.com/watch?v=F1GUjHPpCLA&t=908s
+ */
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 

@@ -10,6 +10,11 @@ import { UserComponent } from './user/user.component';
 import { AuthGuardService as AuthGuard } from './auth-guard.service';
 import { AdministratorComponent } from './user/administrator/administrator.component';
 
+
+/*
+Format for creating routes
+https://www.youtube.com/watch?v=e8BlURn6SFk
+*/
 //List of routes that exist on the client side that a user can go through
 export const appRoutes: Routes = [
     { path: 'home-full', component: HomeFullComponent/*, canActivate:[AuthGuard]*/ },

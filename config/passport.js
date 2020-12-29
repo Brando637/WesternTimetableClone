@@ -23,6 +23,10 @@ const app = express();//Create an express object, a web application is created
 const expressSanitizer = require('express-sanitizer');
 app.use(expressSanitizer());
 
+/*
+Format for 'signup' and 'login' when calling local strategy come from the following tutorial
+https://www.digitalocean.com/community/tutorials/api-authentication-with-json-web-tokensjwt-and-passport
+ */
 //Create a new account and add it to the database
 passport.use(
     'signup',
@@ -61,6 +65,7 @@ passport.use(
                             console.log("The token is the following" + emailToken);
                             User.create({ fName, email: emailSan, password: passwordSan, emailToken })
                             .then(user => {
+                                //Creating email message comes from the following tutorial https://www.youtube.com/watch?v=Zyc9pZrFoWE&t=420s
                                 const msg = {
                                     from: 'se3316testlab5@gmail.com',
                                     to: emailSan,

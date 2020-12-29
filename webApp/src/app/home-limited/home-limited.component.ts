@@ -12,7 +12,10 @@ import { Router } from '@angular/router';
   encapsulation: ViewEncapsulation.None
 })
 export class HomeLimitedComponent implements OnInit {
-
+  /*
+  How to insert html into the loaded page
+  https://stackoverflow.com/questions/60264854/dynamically-insert-mat-checkbox
+  */
   searchCourseForm: FormGroup;
   searchCourseFormKey: FormGroup;
 

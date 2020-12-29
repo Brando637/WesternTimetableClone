@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
+/*
+Tutorial on how to create the schema comes from the following
+https://www.youtube.com/watch?v=6FOq4cUdH8k
+ */
+
 const UserSchema = new mongoose.Schema({
     fName: {
         type: String,
